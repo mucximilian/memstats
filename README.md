@@ -28,9 +28,9 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 ##Examples
 
 ###Cumulative overall results
-![Total points](./plots/points_total_cum.png)
-![Total points](./plots/items_total_cum.png)
+![Total points](./output/plots/points_total_cum.png)
+![Total points](./output/plots/items_total_cum.png)
 
 ###Absolute overall results (per day)
-![Total points](./plots/points_total_abs.png)
-![Total points](./plots/items_total_abs.png)
+![Total points](./output/plots/points_total_abs.png)
+![Total points](./output/plots/items_total_abs.png)
