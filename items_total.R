@@ -12,6 +12,8 @@ get_items_total_abs <- function(mem_stats) {
     mem_stats_plot <- ggplot(items_total_abs, aes(x=DATE, y=ITEMS_ABS)) +
         geom_point(shape=20, size=1, color="grey30") +
         geom_smooth(method=lm) +
+        geom_hline(yintercept=mean(items_total_abs$ITEMS_ABS, na.rm=TRUE),
+                   colour="lightblue") +
         labs(x = "") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
@@ -38,11 +40,18 @@ get_items_total_cum <- function(mem_stats) {
     plot(mem_stats_plot, "items_total_cum")
 }
 
+get_items_total_avg_day <- function(mem_stats) {
+    items_total_avg <- get_items_abs(mem_stats)
+    print(mean(items_total_avg$ITEMS_ABS, na.rm=TRUE))
+}
+
 ################################################################################
 
-file <- "csv/memrise_stats_20160215.csv"
+file <- "input/csv/memrise_stats_20160215.csv"
 
 mem_stats <- get_data(file)
 
 get_items_total_abs(mem_stats)
 get_items_total_cum(mem_stats)
+
+get_items_total_avg_day(mem_stats)
