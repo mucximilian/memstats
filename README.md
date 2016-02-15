@@ -5,7 +5,7 @@ retrieved daily via the [unofficial API](https://github.com/carpiediem/memrise-e
 
 ##About
 
-Currently only the all-time points are plotted for my [Memrise profile](http://www.memrise.com/user/mucx).
+Currently only the cumulative and absolute all-time points and items are plotted for my [Memrise profile](http://www.memrise.com/user/mucx).
 
 The stats are retrieved daily via a cron-job controlled PHP script and stored
 in a MySQL database. Using the quick export function of PHPMyAdmin, a CSV file is created containing the following data:
