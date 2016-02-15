@@ -47,6 +47,11 @@ get_items_abs <- function(mem_stats) {
     return(mem_stats_items_abs)
 }
 
+get_followersing <- function(mem_stats) {
+    mem_stats_items_abs <- mem_stats[, c(1, 2, 8, 9)]
+    return(mem_stats_items_abs)
+}
+
 get_period_bounds <- function(period) {
     
 }

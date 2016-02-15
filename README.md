@@ -21,7 +21,6 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 * Period subsets (week, month, year, total)
   * Adding points/average points per period graphs
   * Adding items/items average per period graphs
-* Adding followers/following graph
 * Allow direct access to the MySQL database (would require no CSV file)
 * Make time plot labels English
 
