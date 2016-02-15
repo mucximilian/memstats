@@ -1,28 +1,3 @@
-################################################################################
-# A simple R script to plot the learning performance on memrise.com that is
-# retrieved via the API and stored in a CSV file. Currently only the all-time
-# points are plotted.
-#
-# NOTES:
-#
-# The stats are retrieved daily via a cron-job controlled PHP script and stored
-# in a MySQL database. The # CSV file is created using the export function of
-# PHPMyAdmin. The POINTS_DAY data is no longer available via the API (as of 
-# 2015-12-15)
-#
-# TO DOs:
-# 
-# General:
-# - 
-# 
-# Additional plots:
-# - POINTS WEEK
-# - POINTS MONTH
-# - FOLLOWERS/FOLLOWING
-# - ITEMS
-#
-################################################################################
-
 library(ggplot2)
 library(scales)
 
