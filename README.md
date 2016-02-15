@@ -25,3 +25,6 @@ in a MySQL database. Using the export function of PHPMyAdmin, a CSV file is crea
 * Adding items/items average per period graphs
 * Adding followers/following graph
 * Allow direct access to the MySQL database (no CSV file needed anymore)
+
+##Examples
+![Total points](./plots/points_total.png)
