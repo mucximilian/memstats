@@ -10,7 +10,7 @@ get_points_total_abs <- function(mem_stats) {
     
     # Plot the graph
     mem_stats_plot <- ggplot(points_total_abs, aes(x=DATE, y=POINTS_ABS)) +
-        geom_point(shape=1) +
+        geom_point(shape=20, size=1, color="grey30") +
         geom_smooth(method=lm) +
         labs(x = "") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
