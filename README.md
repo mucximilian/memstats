@@ -28,5 +28,10 @@ in a MySQL database. Using the quick export function of PHPMyAdmin, a CSV file i
 * Make plot labels English
 
 ##Examples
+Cumulative overall results
 ![Total points](./plots/points_total_cum.png)
+![Total points](./plots/items_total_cum.png)
+
+Absolute overall results (per day)
 ![Total points](./plots/points_total_abs.png)
+![Total points](./plots/items_total_abs.png)
