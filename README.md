@@ -1,14 +1,12 @@
 # memstats
 
-A simple R script that analyzes and plots a user's recorded learning performance on [Memrise](http://www.memrise.com). The learning data is
-retrieved daily via the [unofficial API](https://github.com/carpiediem/memrise-enhancement-suite/wiki/Unofficial-Documentation-for-the-Memrise-API) and stored in a CSV file. 
+A collection of R scripts that analyze and plot my recorded learning performance on [Memrise](http://www.memrise.com). The learning data is retrieved daily via the [unofficial API](https://github.com/carpiediem/memrise-enhancement-suite/wiki/Unofficial-Documentation-for-the-Memrise-API) and stored in a CSV file. 
 
 ##About
 
 Currently only the cumulative and absolute all-time points and items are plotted for my [Memrise profile](http://www.memrise.com/user/mucx).
 
-The stats are retrieved daily via a cron-job controlled PHP script and stored
-in a MySQL database. Using the quick export function of PHPMyAdmin, a CSV file is created containing the following data:
+The statistical data are retrieved daily via a cron-job controlled PHP script and stored in a MySQL database (the PHP script is not part of this repository). Using the quick export function of PHPMyAdmin, a CSV file is created containing the following data:
 
 * DATE:         Date of the data retrieval
 * POINTS_TOTAL: Cumulative sum of all points
