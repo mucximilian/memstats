@@ -15,7 +15,7 @@ get_items_total_abs <- function(mem_stats) {
         labs(x = "") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "items per day") +
+        labs(y = "Items per day") +
         scale_y_continuous(labels = comma) +
         labs(title = "Memrise all-time items absolute")
     
@@ -31,7 +31,7 @@ get_items_total_cum <- function(mem_stats) {
         labs(x = "") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "items total (all-time)") +
+        labs(y = "Items total (all-time)") +
         scale_y_continuous(labels = comma) +
         labs(title = "Memrise all-time items cumulative")
     
