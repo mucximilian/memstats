@@ -1,17 +1,15 @@
 library(ggplot2)
 library(scales)
 
-source("get_data.R")
+source("functions.R")
 
 file <- "csv/memrise_stats_20160215.csv"
 
 mem_stats <- get_data(file)
-
-# Creating a subset with total points per day of the 2nd and 3rd column
-mem_stats_points_total <- mem_stats[, c(2, 3)]
+points_total <- get_data_points_total(mem_stats)
 
 # Plot the graph
-mem_stats_plot <- ggplot(mem_stats_points_total, aes(x=DATE, y=POINTS_TOTAL)) +
+mem_stats_plot <- ggplot(points_total, aes(x=DATE, y=POINTS_TOTAL)) +
     geom_line(colour = "red", size = 0.5) +
     labs(x = "") +
     scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
