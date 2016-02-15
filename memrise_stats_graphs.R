@@ -47,6 +47,6 @@ mem_stats_plot <- ggplot(mem_stats_points_total, aes(x=DATE, y=POINTS_TOTAL)) +
 
 print(mem_stats_plot)
 
-ggsave("plot.png", plot=mem_stats_plot, dpi=96)
+ggsave("plots/plot.png", plot=mem_stats_plot, dpi=96)
 dev.off()
 
