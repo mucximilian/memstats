@@ -28,4 +28,5 @@ in a MySQL database. Using the export function of PHPMyAdmin, a CSV file is crea
 * Make plot labels English
 
 ##Examples
-![Total points](./plots/points_total.png)
+![Total points](./plots/points_total_cum.png)
+![Total points](./plots/points_total_abs.png)
