@@ -3,7 +3,7 @@
 A simple R script that analyzes and plots a user's recorded learning performance on memrise.com. The learning data is
 retrieved daily via the [unofficial API](https://github.com/carpiediem/memrise-enhancement-suite/wiki/Unofficial-Documentation-for-the-Memrise-API) and stored in a CSV file. 
 
-##NOTES
+##About
 
 Currently only the all-time points are plotted.
 
@@ -25,6 +25,7 @@ in a MySQL database. Using the export function of PHPMyAdmin, a CSV file is crea
 * Adding items/items average per period graphs
 * Adding followers/following graph
 * Allow direct access to the MySQL database (no CSV file needed anymore)
+* Make plot labels English
 
 ##Examples
 ![Total points](./plots/points_total.png)
