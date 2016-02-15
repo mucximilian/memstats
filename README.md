@@ -8,7 +8,7 @@ retrieved daily via the [unofficial API](https://github.com/carpiediem/memrise-e
 Currently only the all-time points are plotted for my [Memrise profile](http://www.memrise.com/user/mucx).
 
 The stats are retrieved daily via a cron-job controlled PHP script and stored
-in a MySQL database. Using the export function of PHPMyAdmin, a CSV file is created containing the following data:
+in a MySQL database. Using the quick export function of PHPMyAdmin, a CSV file is created containing the following data:
 
 * DATE:         Date of the data retrieval
 * POINTS_TOTAL: Cumulative sum of all points

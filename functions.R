@@ -10,7 +10,7 @@ get_data <- function(file) {
         "POINTS_DAY",
         "POINTS_MONTH",
         "POINTS_WEEK",
-        "ITEMS",
+        "ITEMS_TOTAL",
         "FOLLOWERS",
         "FOLLOWING"
     )

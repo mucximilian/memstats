@@ -5,37 +5,37 @@ source("functions.R")
 
 ################################################################################
 
-get_points_total_abs <- function(mem_stats) {
-    points_total_abs <- get_points_abs(mem_stats)
+get_items_total_abs <- function(mem_stats) {
+    items_total_abs <- get_items_abs(mem_stats)
     
     # Plot the graph
-    mem_stats_plot <- ggplot(points_total_abs, aes(x=DATE, y=POINTS_ABS)) +
+    mem_stats_plot <- ggplot(items_total_abs, aes(x=DATE, y=ITEMS_ABS)) +
         geom_point(shape=1) +
         geom_smooth(method=lm) +
         labs(x = "") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "Points per day") +
+        labs(y = "items per day") +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise all-time points absolute")
+        labs(title = "Memrise all-time items absolute")
     
-    plot(mem_stats_plot, "points_total_abs")
+    plot(mem_stats_plot, "items_total_abs")
 }
 
-get_points_total_cum <- function(mem_stats) {
-    points_total_cum <- get_points_cum(mem_stats)
+get_items_total_cum <- function(mem_stats) {
+    items_total_cum <- get_items_cum(mem_stats)
     
     # Plot the graph
-    mem_stats_plot <- ggplot(points_total_cum, aes(x=DATE, y=POINTS_TOTAL)) +
+    mem_stats_plot <- ggplot(items_total_cum, aes(x=DATE, y=ITEMS_TOTAL)) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "Points total (all-time)") +
+        labs(y = "items total (all-time)") +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise all-time points cumulative")
+        labs(title = "Memrise all-time items cumulative")
     
-    plot(mem_stats_plot, "points_total_cum")
+    plot(mem_stats_plot, "items_total_cum")
 }
 
 ################################################################################
@@ -44,5 +44,5 @@ file <- "csv/memrise_stats_20160215.csv"
 
 mem_stats <- get_data(file)
 
-get_points_total_abs(mem_stats)
-get_points_total_cum(mem_stats)
+get_items_total_abs(mem_stats)
+get_items_total_cum(mem_stats)
