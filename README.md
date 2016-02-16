@@ -35,4 +35,4 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 ![Items per day](./output/plots/items_total_abs.png)
 
 ###Number of total followers/-ing
-![Total followers/-ing](./output/plots/items_total_abs.png)
+![Total followers/-ing](./output/plots/followersing.png)
