@@ -18,18 +18,21 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 * FOLLOWING:    Number of people I follow
 
 ##TO DOs
-* Period subsets (week, month, year, total)
+* Period subsets (week, month, year) for points/items
   * Adding points/average points per period graphs
   * Adding items/items average per period graphs
-* Allow direct access to the MySQL database (would require no CSV file)
-* Make time plot labels English
+* Enable direct access to a MySQL database (would require no CSV file)
+* Time (x-axis) labels in English
 
 ##Examples
 
 ###Cumulative overall results
 ![Total points](./output/plots/points_total_cum.png)
-![Total points](./output/plots/items_total_cum.png)
+![Total items](./output/plots/items_total_cum.png)
 
-###Absolute overall results (per day)
-![Total points](./output/plots/points_total_abs.png)
-![Total points](./output/plots/items_total_abs.png)
+###Overall results (per day)
+![Points per day](./output/plots/points_total_abs.png)
+![Items per day](./output/plots/items_total_abs.png)
+
+###Number of total followers/-ing
+![Total followers/-ing](./output/plots/items_total_abs.png)
