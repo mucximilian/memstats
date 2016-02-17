@@ -6,7 +6,7 @@ A collection of R scripts that analyze and plot my recorded learning progress an
 
 Currently only the cumulative and absolute all-time points and items are plotted for my [Memrise profile](http://www.memrise.com/user/mucx) when the scripts are executed.
 
-A cron-job controlled PHP script obtains the raw learning data from the API and stores it into a MySQL database (**Note:** The PHP script is not part of the repository). Using the quick export function of *PHPMyAdmin*, a CSV file can be created containing the following data:
+A cron-job controlled PHP script obtains the raw learning data from the API and stores it into a MySQL database (__Note:__ The PHP script is not part of the repository). Using the quick export function of _PHPMyAdmin_, a CSV file can be created containing the following data:
 
 * DATE:         Date of the data retrieval
 * POINTS_TOTAL: Cumulative sum of all points
@@ -18,12 +18,10 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 * FOLLOWING:    Number of people I follow
 
 ##TO DOs
-* Period subsets (week, month, year, custom) for points/items and averages using the *xts* function
 
-    period.apply(...)
-    
-  * Adding points/items points per period graphs
-  * Adding output CSV with statistical summary
+* Period subsets (week, month, year, custom) for points/items and averages using the _xts_ function _period.apply(...)_
+* Adding points/items points per period graphs
+* Adding output CSV with statistical summary
 * Enable direct access to a MySQL database (would require no CSV file)
 * Time (x-axis) labels in English
 
@@ -39,3 +37,6 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 
 ###Number of total followers/-ing
 ![Total followers/-ing](./output/plots/followersing.png)
+
+* * *
+License: GNU GENERAL PUBLIC LICENSE
