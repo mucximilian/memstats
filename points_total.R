@@ -14,12 +14,12 @@ get_points_total_abs <- function(mem_stats) {
         geom_smooth(method=lm) +
         geom_hline(yintercept=mean(points_total_abs$POINTS_ABS, na.rm=TRUE),
                    colour="lightblue") +
-        labs(x = "") +
+        labs(x = "Days") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "Points per day") +
+        labs(y = "Points") +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise all-time points absolute")
+        labs(title = "Memrise points per day (all-time)")
     
     plot(mem_stats_plot, "points_total_abs")
 }
@@ -30,12 +30,12 @@ get_points_total_cum <- function(mem_stats) {
     # Plot the graph
     mem_stats_plot <- ggplot(points_total_cum, aes(x=DATE, y=POINTS_TOTAL)) +
         geom_line(colour = "red", size = 0.5) +
-        labs(x = "") +
+        labs(x = "Days") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "Points total (all-time)") +
+        labs(y = "Points") +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise all-time points cumulative")
+        labs(title = "Memrise points cumulative (all-time)")
     
     plot(mem_stats_plot, "points_total_cum")
 }
