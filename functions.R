@@ -72,6 +72,7 @@ get_subset <- function(mem_stats, period) {
 plot <- function(plot, name){
     print(plot)
     file <- paste("output/plots/", name, ".png", sep = "")
+    print(paste("Saving plot", file, sep=" "))
     ggsave(file, plot=plot, dpi=96)
     dev.off()
 }
