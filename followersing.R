@@ -16,7 +16,7 @@ mem_stats_plot <- ggplot() +
     geom_line(data=followersing, aes(x=DATE, y=FOLLOWERS, color="green")) +
     geom_line(data=followersing, aes(x=DATE, y=FOLLOWING, color="blue")) +
     scale_color_manual(name="", labels=c("Following", "Followers"), values = c("blue", "green")) +
-    labs(x = "Days") +
+    labs(x = "Day") +
     scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                  labels=date_format("%b %y")) +
     labs(y = "People") +

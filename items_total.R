@@ -14,12 +14,12 @@ get_items_total_abs <- function(mem_stats) {
         geom_smooth(method=lm) +
         geom_hline(yintercept=mean(items_total_abs$ITEMS_ABS, na.rm=TRUE),
                    colour="lightblue") +
-        labs(x = "Days") +
+        labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = "Items") +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise items per day (all-time)")
+        labs(title = "Memrise items learned per day (all-time)")
     
     plot(mem_stats_plot, "items_total_abs")
 }
@@ -30,12 +30,12 @@ get_items_total_cum <- function(mem_stats) {
     # Plot the graph
     mem_stats_plot <- ggplot(items_total_cum, aes(x=DATE, y=ITEMS_TOTAL)) +
         geom_line(colour = "red", size = 0.5) +
-        labs(x = "Days") +
+        labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = "Items") +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise items cumulative (all-time)")
+        labs(title = "Memrise items learned cumulative (all-time)")
     
     plot(mem_stats_plot, "items_total_cum")
 }

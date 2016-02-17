@@ -16,12 +16,12 @@ get_points_total_weekly <- function(mem_stats) {
     # Plot the graph
     mem_stats_plot <- ggplot(bla, aes(x=datetime, y=bla[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
-        labs(x = "Weeks") +
+        labs(x = "Week") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = "Points") +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise points week means")
+        labs(title = "Memrise points (average per week)")
     
     plot(mem_stats_plot, "points_total_weekly")
 }

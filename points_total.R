@@ -14,7 +14,7 @@ get_points_total_abs <- function(mem_stats) {
         geom_smooth(method=lm) +
         geom_hline(yintercept=mean(points_total_abs$POINTS_ABS, na.rm=TRUE),
                    colour="lightblue") +
-        labs(x = "Days") +
+        labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = "Points") +
@@ -30,7 +30,7 @@ get_points_total_cum <- function(mem_stats) {
     # Plot the graph
     mem_stats_plot <- ggplot(points_total_cum, aes(x=DATE, y=POINTS_TOTAL)) +
         geom_line(colour = "red", size = 0.5) +
-        labs(x = "Days") +
+        labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = "Points") +
