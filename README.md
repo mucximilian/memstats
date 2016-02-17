@@ -18,9 +18,10 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 * FOLLOWING:    Number of people I follow
 
 ##TO DOs
-* Period subsets (week, month, year) for points/items
-  * Adding points/average points per period graphs
-  * Adding items/items average per period graphs
+* Period subsets (week, month, year, custom) for points/items and averages using the *xts* function
+    period.apply(...)
+  * Adding points/items points per period graphs
+  * Adding output CSV with statistical summary
 * Enable direct access to a MySQL database (would require no CSV file)
 * Time (x-axis) labels in English
 
