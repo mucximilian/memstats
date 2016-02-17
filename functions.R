@@ -23,6 +23,10 @@ get_data <- function(file) {
     mem_stats$POINTS_ABS <- c(NA, mem_stats[2:nrow(mem_stats), 3] - mem_stats[1:(nrow(mem_stats)-1), 3])
     mem_stats$ITEMS_ABS <- c(NA, mem_stats[2:nrow(mem_stats), 7] - mem_stats[1:(nrow(mem_stats)-1), 7])
     
+    # Replacing NAs with zero
+    mem_stats$POINTS_ABS[is.na(mem_stats$POINTS_ABS)] <- 0
+    mem_stats$ITEMS_ABS[is.na(mem_stats$ITEMS_ABS)] <- 0
+    
     return(mem_stats)
 }
 
