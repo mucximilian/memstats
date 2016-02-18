@@ -24,70 +24,70 @@ plot_weekly <- function(stats_xts, y_type) {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise", y_type,"(average per week)", sep=" "))
     
-    plot(stats_plot, paste(tolower(y_type), "total_weekly", sep="_"))
+    plot(stats_plot, paste(tolower(y_type), "total_week", sep="_"))
 }
 
-get_items_total_weekly <- function(mem_stats) {
-    mem_stats_weekly <- apply.weekly(mem_stats.xts, mean, na.rm=TRUE)
+plot_monthly <- function(stats_xts, y_type) {
+    stats <- apply.monthly(stats_xts, mean, na.rm=TRUE)
     
-    df.mem_stats_weekly <- data.frame(datetime = index(mem_stats_weekly),
-                                      mem_stats_weekly[, c(1)],
-                                      row.names = NULL)
+    df.stats <- data.frame(datetime = index(stats),
+                           stats[, c(1)],
+                           row.names = NULL)
     
     # Plot the graph
-    mem_stats_plot <- ggplot(df.mem_stats_weekly, 
-                             aes(x=datetime, y=df.mem_stats_weekly[, c(2)])) +
+    stats_plot <- ggplot(df.stats, 
+                         aes(x=datetime, y=df.stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "Week") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "Points") +
+        labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise items (average per week)")
+        labs(title = paste("Memrise", y_type,"(average per month)", sep=" "))
     
-    plot(mem_stats_plot, "items_total_weekly")
+    plot(stats_plot, paste(tolower(y_type), "total_month", sep="_"))
 }
 
-get_items_total_monthly <- function(mem_stats) {
-    mem_stats_monthly <- apply.monthly(mem_stats.xts, mean, na.rm=TRUE)
+plot_quarterly <- function(stats_xts, y_type) {
+    stats <- apply.quarterly(stats_xts, mean, na.rm=TRUE)
     
-    mem_stats_monthly <- data.frame(datetime = index(mem_stats_monthly),
-                                    mem_stats_monthly[, c(1)],
-                                    row.names = NULL)
+    df.stats <- data.frame(datetime = index(stats),
+                           stats[, c(1)],
+                           row.names = NULL)
     
     # Plot the graph
-    mem_stats_plot <- ggplot(mem_stats_monthly, 
-                             aes(x=datetime, y=mem_stats_monthly[, c(2)])) +
+    stats_plot <- ggplot(df.stats, 
+                         aes(x=datetime, y=df.stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "Month") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = "Points") +
+        labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise items (average per month)")
+        labs(title = paste("Memrise", y_type,"(average per quarter)", sep=" "))
     
-    plot(mem_stats_plot, "items_total_month")
+    plot(stats_plot, paste(tolower(y_type), "total_quarter", sep="_"))
 }
 
-get_items_total_quarterly <- function(mem_stats) {
-    mem_stats_quarterly <- apply.quarterly(mem_stats.xts, mean, na.rm=TRUE)
+plot_yearly <- function(stats_xts, y_type) {
+    stats <- apply.yearly(stats_xts, mean, na.rm=TRUE)
     
-    mem_stats_quarterly <- data.frame(datetime = index(mem_stats_quarterly),
-                                      mem_stats_quarterly[, c(1)],
-                                      row.names = NULL)
+    df.stats <- data.frame(datetime = index(stats),
+                           stats[, c(1)],
+                           row.names = NULL)
     
     # Plot the graph
-    mem_stats_plot <- ggplot(mem_stats_quarterly, 
-                             aes(x=datetime, y=mem_stats_quarterly[, c(2)])) +
+    stats_plot <- ggplot(df.stats, 
+                         aes(x=datetime, y=df.stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
-        labs(x = "Month") +
-        scale_x_date(date_breaks = "1 month",
+        labs(x = "Year") +
+        scale_x_date(date_breaks = "1 year",
                      labels=date_format("%b %y")) +
-        labs(y = "Points") +
+        labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = "Memrise items (average per quarter)")
+        labs(title = paste("Memrise", y_type,"(average per year)", sep=" "))
     
-    plot(mem_stats_plot, "items_total_quarter")
+    plot(stats_plot, paste(tolower(y_type), "total_year", sep="_"))
 }
 
 get_items_total_yearly <- function(mem_stats) {
@@ -117,11 +117,17 @@ file <- "input/csv/memrise_stats_20160215.csv"
 
 mem_stats <- get_data(file)
 
+mem_stats_points.xts <- xts(mem_stats[, c(10)], order.by = mem_stats[, "DATE"])
 mem_stats_items.xts <- xts(mem_stats[, c(11)], order.by = mem_stats[, "DATE"])
 
 print(head(mem_stats_items.xts))
 
 plot_weekly(mem_stats_items.xts, "Items")
-#get_items_total_monthly(mem_stats_items.xts)
-#get_items_total_quarterly(mem_stats_items.xts)
-#get_items_total_yearly(mem_stats_items.xts)
+plot_monthly(mem_stats_items.xts, "Items")
+plot_quarterly(mem_stats_items.xts, "Items")
+plot_yearly(mem_stats_items.xts, "Items")
+
+plot_weekly(mem_stats_points.xts, "Points")
+plot_monthly(mem_stats_points.xts, "Points")
+plot_quarterly(mem_stats_points.xts, "Points")
+plot_yearly(mem_stats_points.xts, "Points")
