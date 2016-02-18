@@ -32,27 +32,27 @@ get_data <- function(file) {
 
 # Data subsets
 get_points_cum <- function(mem_stats) {
-    mem_stats_points_tot <- mem_stats[, c(1, 2, 3)]
+    mem_stats_points_tot <- mem_stats[, c(2, 3)]
     return(mem_stats_points_tot)
 }
 
 get_points_abs <- function(mem_stats) {
-    mem_stats_points_abs <- mem_stats[, c(1, 2, 10)]
+    mem_stats_points_abs <- mem_stats[, c(2, 10)]
     return(mem_stats_points_abs)
 }
 
 get_items_cum <- function(mem_stats) {
-    mem_stats_items_tot <- mem_stats[, c(1, 2, 7)]
+    mem_stats_items_tot <- mem_stats[, c(2, 7)]
     return(mem_stats_items_tot)
 }
 
 get_items_abs <- function(mem_stats) {
-    mem_stats_items_abs <- mem_stats[, c(1, 2, 11)]
+    mem_stats_items_abs <- mem_stats[, c(2, 11)]
     return(mem_stats_items_abs)
 }
 
 get_followersing <- function(mem_stats) {
-    mem_stats_items_abs <- mem_stats[, c(1, 2, 8, 9)]
+    mem_stats_items_abs <- mem_stats[, c(2, 8, 9)]
     return(mem_stats_items_abs)
 }
 
@@ -69,7 +69,7 @@ get_subset <- function(mem_stats, period) {
     return(mem_stats_sub)
 }
 
-plot <- function(plot, name){
+save_plot <- function(plot, name){
     print(plot)
     file <- paste("output/plots/", name, ".png", sep = "")
     print(paste("Saving plot", file, sep=" "))
