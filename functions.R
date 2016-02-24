@@ -86,3 +86,8 @@ save_plot <- function(plot, name){
     ggsave(file, plot=plot, dpi=96)
     dev.off()
 }
+
+create_xts_dataframe <- function(col) {
+    df.xts <- xts(mem_stats[, c(col)], order.by = mem_stats[, "DATE"])
+    return(df.xts)
+}

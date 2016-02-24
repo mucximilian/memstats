@@ -8,6 +8,7 @@ source("functions.R")
 
 # Cumulative plot
 plot_cum <- function(stats, y_type) {
+
     # Plot the graph
     stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
@@ -16,15 +17,16 @@ plot_cum <- function(stats, y_type) {
                      labels=date_format("%b %y")) +
         labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = paste("Memrise", y_type,"cumulative (all-time)", sep="_"))
+        labs(title = paste("Memrise", y_type,"cumulative (all-time)", sep=" "))
     
-    plot(stats_plot, paste(tolower(y_type), "total_cum", sep="_"))
+    save_plot(stats_plot, paste(tolower(y_type), "total_cum", sep="_"))
 }
 
 ################################################################################
 # Functions for total plots
 
-plot_daily_abs <- function(stats, y_type) {
+plot_daily_abs <- function(stats, y_type, dir="") {
+    
     # Plot the graph
     stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
         geom_point(shape=20, size=1, color="grey30") +
@@ -38,78 +40,96 @@ plot_daily_abs <- function(stats, y_type) {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise", y_type,"per day (all-time)", sep=" "))
     
-    plot(stats_plot, paste(tolower(y_type), "total_abs", sep="_"))
+    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_day", sep="_"))
 }
 
-plot_weekly_abs <- function(stats, y_type) {
+plot_weekly_abs <- function(stats_xts, y_type, dir="") {
+    
+    stats <- apply.weekly(stats_xts, sum, na.rm=TRUE)
+    
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
+
     # Plot the graph
-    stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_point(shape=20, size=1, color="grey30") +
-        geom_smooth(method=lm) +
-        geom_hline(yintercept=mean(stats[, c(2)], na.rm=TRUE),
-                   colour="lightblue") +
+        geom_smooth(method=lm, size=0.5) +
+        geom_hline(yintercept=mean(df.stats[, c(2)], na.rm=TRUE),
+                   colour="lightblue", size=0.5) +
         labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = paste("Memrise", y_type,"per day (all-time)", sep=" "))
+        labs(title = paste("Memrise ", y_type," (total per week)", sep=" "))
     
-    plot(stats_plot, paste(tolower(y_type), "total_abs", sep="_"))
+    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_week", sep="_"))
 }
 
-plot_monthly_abs <- function(stats, y_type) {
+plot_monthly_abs <- function(stats_xts, y_type, dir="") {
+    
+    stats <- apply.monthly(stats_xts, sum, na.rm=TRUE)
+    
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
+
     # Plot the graph
-    stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_point(shape=20, size=1, color="grey30") +
-        geom_smooth(method=lm) +
-        geom_hline(yintercept=mean(stats[, c(2)], na.rm=TRUE),
-                   colour="lightblue") +
+        geom_smooth(method=lm, size=0.5) +
+        geom_hline(yintercept=mean(df.stats[, c(2)], na.rm=TRUE),
+                   colour="lightblue", size=0.5) +
         labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = paste("Memrise", y_type,"per day (all-time)", sep=" "))
+        labs(title = paste("Memrise ", y_type," (total per month)", sep=" "))
     
-    plot(stats_plot, paste(tolower(y_type), "total_abs", sep="_"))
+    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_month", sep="_"))
 }
 
-plot_quarterly_abs <- function(stats, y_type) {
+plot_quarterly_abs <- function(stats_xts, y_type, dir="") {
+    
+    stats <- apply.quarterly(stats_xts, sum, na.rm=TRUE)
+    
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
+
     # Plot the graph
-    stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_point(shape=20, size=1, color="grey30") +
-        geom_smooth(method=lm) +
-        geom_hline(yintercept=mean(stats[, c(2)], na.rm=TRUE),
-                   colour="lightblue") +
+        geom_smooth(method=lm, size=0.5) +
+        geom_hline(yintercept=mean(df.stats[, c(2)], na.rm=TRUE),
+                   colour="lightblue", size=0.5) +
         labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = paste("Memrise", y_type,"per day (all-time)", sep=" "))
+        labs(title = paste("Memrise ", y_type," (total per quarter)", sep=" "))
     
-    plot(stats_plot, paste(tolower(y_type), "total_abs", sep="_"))
+    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_quarter", sep="_"))
 }
 
-plot_yearly_abs <- function(stats, y_type) {
+plot_yearly_abs <- function(stats_xts, y_type, dir="") {
+    
+    stats <- apply.yearly(stats_xts, sum, na.rm=TRUE)
+    
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
+
     # Plot the graph
-    stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_point(shape=20, size=1, color="grey30") +
-        geom_smooth(method=lm) +
-        geom_hline(yintercept=mean(stats[, c(2)], na.rm=TRUE),
-                   colour="lightblue") +
+        geom_smooth(method=lm, size=0.5) +
+        geom_hline(yintercept=mean(df.stats[, c(2)], na.rm=TRUE),
+                   colour="lightblue", size=0.5) +
         labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         labs(y = y_type) +
         scale_y_continuous(labels = comma) +
-        labs(title = paste("Memrise", y_type,"per day (all-time)", sep=" "))
+        labs(title = paste("Memrise ", y_type," (total per year)", sep=" "))
     
-    plot(stats_plot, paste(tolower(y_type), "total_abs", sep="_"))
+    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_year", sep="_"))
 }
-
-
 
 ################################################################################
 # Functions for period plots
@@ -123,15 +143,13 @@ plot_yearly_abs <- function(stats, y_type) {
 # - year
 
 plot_weekly_avg <- function(stats_xts, y_type) {
-    stats_weekly <- apply.weekly(stats_xts, mean, na.rm=TRUE)
     
-    df.stats_weekly <- data.frame(datetime = index(stats_weekly),
-                                  stats_weekly[, c(1)],
-                                  row.names = NULL)
+    stats <- apply.weekly(stats_xts, mean, na.rm=TRUE)
+    
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
     
     # Plot the graph
-    stats_plot <- ggplot(df.stats_weekly, 
-                             aes(x=datetime, y=df.stats_weekly[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "Week") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
@@ -140,19 +158,16 @@ plot_weekly_avg <- function(stats_xts, y_type) {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise", y_type,"(average per week)", sep=" "))
     
-    save_plot(stats_plot, paste(tolower(y_type), "total_week", sep="_"))
+    save_plot(stats_plot, paste(tolower(y_type), "avg_week", sep="_"))
 }
 
 plot_monthly_avg <- function(stats_xts, y_type) {
     stats <- apply.monthly(stats_xts, mean, na.rm=TRUE)
     
-    df.stats <- data.frame(datetime = index(stats),
-                           stats[, c(1)],
-                           row.names = NULL)
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
     
     # Plot the graph
-    stats_plot <- ggplot(df.stats, 
-                         aes(x=datetime, y=df.stats[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "Week") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
@@ -161,20 +176,17 @@ plot_monthly_avg <- function(stats_xts, y_type) {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise", y_type,"(average per month)", sep=" "))
     
-    save_plot(stats_plot, paste(tolower(y_type), "total_month", sep="_"))
+    save_plot(stats_plot, paste(tolower(y_type), "avg_month", sep="_"))
 }
 
 
 plot_quarterly_avg <- function(stats_xts, y_type) {
     stats <- apply.quarterly(stats_xts, mean, na.rm=TRUE)
     
-    df.stats <- data.frame(DATE = index(stats),
-                           stats[, c(1)],
-                           row.names = NULL)
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
     
     # Plot the graph
-    stats_plot <- ggplot(df.stats, 
-                         aes(x=DATE, y=df.stats[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "Month") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
@@ -183,19 +195,16 @@ plot_quarterly_avg <- function(stats_xts, y_type) {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise", y_type,"(average per quarter)", sep=" "))
     
-    save_plot(stats_plot, paste(tolower(y_type), "total_quarter", sep="_"))
+    save_plot(stats_plot, paste(tolower(y_type), "avg_quarter", sep="_"))
 }
 
 plot_yearly_avg <- function(stats_xts, y_type) {
     stats <- apply.yearly(stats_xts, mean, na.rm=TRUE)
     
-    df.stats <- data.frame(DATE = index(stats),
-                           stats[, c(1)],
-                           row.names = NULL)
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
     
     # Plot the graph
-    stats_plot <- ggplot(df.stats, 
-                         aes(x=DATE, y=df.stats[, c(2)])) +
+    stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "Year") +
         scale_x_date(date_breaks = "1 year",
@@ -204,7 +213,7 @@ plot_yearly_avg <- function(stats_xts, y_type) {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise", y_type,"(average per year)", sep=" "))
     
-    save_plot(stats_plot, paste(tolower(y_type), "total_year", sep="_"))
+    save_plot(stats_plot, paste(tolower(y_type), "avg_year", sep="_"))
 }
 
 ################################################################################
@@ -225,5 +234,5 @@ plot_followersing <- function(stats) {
         scale_y_continuous(labels = comma) +
         labs(title = "Memrise followers and following")
     
-    plot(mem_stats_plot, "followersing")
+    save_plot(mem_stats_plot, "followersing")
 }
