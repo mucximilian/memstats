@@ -19,8 +19,7 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 
 ##TO DOs
 
-* Period subsets (week, month, year, custom) for points/items and averages using the _xts_ function _period.apply(...)_
-* Adding points/items points per period graphs
+* Period subsets (all weeks, months, quarters, years) for points/items with averages with graphs
 * Adding output CSV with statistical summary
 * Enable direct access to a MySQL database (would require no CSV file)
 * Time (x-axis) labels in English
