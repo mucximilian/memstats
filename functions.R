@@ -69,6 +69,16 @@ get_subset <- function(mem_stats, period) {
     return(mem_stats_sub)
 }
 
+get_points_total_avg_day <- function(mem_stats) {
+    points_total_avg <- get_points_abs(mem_stats)
+    print(mean(points_total_avg$POINTS_ABS, na.rm=TRUE))
+}
+
+get_items_total_avg_day <- function(mem_stats) {
+    items_total_avg <- get_items_abs(mem_stats)
+    print(mean(items_total_avg$ITEMS_ABS, na.rm=TRUE))
+}
+
 save_plot <- function(plot, name){
     print(plot)
     file <- paste("output/plots/", name, ".png", sep = "")
