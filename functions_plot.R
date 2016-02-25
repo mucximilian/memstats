@@ -43,12 +43,12 @@ plot_daily_abs <- function(stats, y_type, dir="") {
     save_plot(stats_plot, paste(dir, tolower(y_type), "abs_day", sep="_"))
 }
 
-plot_weekly_abs <- function(stats_xts, y_type, dir="") {
+plot_weekly_abs <- function(stats_xts ,y_type, dir="") {
     
     stats <- apply.weekly(stats_xts, sum, na.rm=TRUE)
     
     df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
-
+    
     # Plot the graph
     stats_plot <- ggplot(df.stats, aes(x=DATE, y=df.stats[, c(2)])) +
         geom_point(shape=20, size=1, color="grey30") +

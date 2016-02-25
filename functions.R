@@ -31,33 +31,19 @@ get_data <- function(file) {
 }
 
 # Data subsets
-get_points_cum <- function(mem_stats) {
-    mem_stats_points_tot <- mem_stats[, c(2, 3)]
+get_cum <- function(col) {
+    mem_stats_points_tot <- mem_stats[, c(2, col)]
     return(mem_stats_points_tot)
 }
 
-get_points_abs <- function(mem_stats) {
-    mem_stats_points_abs <- mem_stats[, c(2, 10)]
-    return(mem_stats_points_abs)
-}
-
-get_items_cum <- function(mem_stats) {
-    mem_stats_items_tot <- mem_stats[, c(2, 7)]
-    return(mem_stats_items_tot)
-}
-
-get_items_abs <- function(mem_stats) {
-    mem_stats_items_abs <- mem_stats[, c(2, 11)]
-    return(mem_stats_items_abs)
+get_abs <- function(col) {
+    mem_stats_abs <- mem_stats[, c(2, col)]
+    return(mem_stats_abs)
 }
 
 get_followersing <- function(mem_stats) {
     mem_stats_items_abs <- mem_stats[, c(2, 8, 9)]
     return(mem_stats_items_abs)
-}
-
-get_period_bounds <- function(period) {
-    
 }
 
 get_subset <- function(mem_stats, period) {
