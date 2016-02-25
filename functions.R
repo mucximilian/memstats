@@ -77,3 +77,7 @@ create_xts_dataframe <- function(col) {
     df.xts <- xts(mem_stats[, c(col)], order.by = mem_stats[, "DATE"])
     return(df.xts)
 }
+
+get_filename <- function(dir, a, b) {
+    return(paste(dir, paste(tolower(a), b, sep="_"), sep =""))
+}

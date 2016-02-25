@@ -40,7 +40,8 @@ plot_daily_abs <- function(stats, y_type, dir="") {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise", y_type,"per day (all-time)", sep=" "))
     
-    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_day", sep="_"))
+    file <- get_filename(dir, y_type, "abs_day")
+    save_plot(stats_plot, file)
 }
 
 plot_weekly_abs <- function(stats_xts ,y_type, dir="") {
@@ -62,7 +63,8 @@ plot_weekly_abs <- function(stats_xts ,y_type, dir="") {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise ", y_type," (total per week)", sep=" "))
     
-    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_week", sep="_"))
+    file <- get_filename(dir, y_type, "abs_week")
+    save_plot(stats_plot, file)
 }
 
 plot_monthly_abs <- function(stats_xts, y_type, dir="") {
@@ -84,7 +86,8 @@ plot_monthly_abs <- function(stats_xts, y_type, dir="") {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise ", y_type," (total per month)", sep=" "))
     
-    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_month", sep="_"))
+    file <- get_filename(dir, y_type, "abs_month")
+    save_plot(stats_plot, file)
 }
 
 plot_quarterly_abs <- function(stats_xts, y_type, dir="") {
@@ -106,7 +109,8 @@ plot_quarterly_abs <- function(stats_xts, y_type, dir="") {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise ", y_type," (total per quarter)", sep=" "))
     
-    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_quarter", sep="_"))
+    file <- get_filename(dir, y_type, "abs_quarter")
+    save_plot(stats_plot, file)
 }
 
 plot_yearly_abs <- function(stats_xts, y_type, dir="") {
@@ -128,7 +132,8 @@ plot_yearly_abs <- function(stats_xts, y_type, dir="") {
         scale_y_continuous(labels = comma) +
         labs(title = paste("Memrise ", y_type," (total per year)", sep=" "))
     
-    save_plot(stats_plot, paste(dir, tolower(y_type), "abs_year", sep="_"))
+    file <- get_filename(dir, y_type, "abs_year")
+    save_plot(stats_plot, file)
 }
 
 ################################################################################
