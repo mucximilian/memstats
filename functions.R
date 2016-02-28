@@ -81,3 +81,13 @@ create_xts_dataframe <- function(col) {
 get_filename <- function(dir, a, b) {
     return(paste(dir, paste(tolower(a), b, sep="_"), sep =""))
 }
+
+split_by_period <- function(df, period) {
+    split_period <- switch(period,
+                           week = "%W",
+                           month = "%m",
+                           year = "%Y")
+    
+    tab <- split(df, format(df$DATE, split_period))
+    return(tab)
+}
