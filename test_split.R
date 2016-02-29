@@ -2,13 +2,12 @@ source("setup.R")
 
 #tab <- split(mem_stats, format(mem_stats$DATE, "%W"))
 
-tab <- split_by_period(mem_stats, "month")
+df <- get_columns(10)
+df.split <- get_period_splits(df, "month")
 
-bla <- function(x) {
-    x.xts <- create_xts_dataframe(x, 10)
+test <- function(x, col){
     print("##########################################")
     print(head(x))
-    print(head(x.xts))
 }
 
-lapply(tab, bla)
+lapply(df.split, test, col=10)

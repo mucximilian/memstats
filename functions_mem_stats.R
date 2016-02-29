@@ -4,25 +4,12 @@
 
 col_date <- 2
 
-create_xts_dataframe <- function(col) {
+get_xts_dataframe <- function(col) {
     # Creates a XTS dataframe with a data and a date column. Requires a 'DATE'
     # column in the input data frame
     
     mem_stats.xts <- xts(mem_stats[, c(col)], order.by = mem_stats[, "DATE"])
     return(mem_stats.xts)
-}
-
-split_by_period <- function(period) {
-    # Splits the mem_stats data frame into a list of data frames by a provided
-    # time period which cann be 'week', 'month' or 'year'
-    
-    split_period <- switch(period,
-                           week = "%W",
-                           month = "%m",
-                           year = "%Y")
-    
-    tab <- split(mem_stats, format(mem_stats$DATE, split_period))
-    return(tab)
 }
 
 ################################################################################
