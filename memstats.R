@@ -1,10 +1,19 @@
 source("setup.R")
 
-################################################################################
-# Overall stats
-
 col_points <- 10
 col_items <- 11
+
+################################################################################
+# Get data subsets with dates
+
+memstats_followersing <- get_columns(c(8, 9))
+memstats_points <- get_columns(col_points)
+memstats_points_cum <- get_columns(3)
+memstats_items <- get_columns(col_items)
+memstats_items_cum <- get_columns(7)
+
+################################################################################
+# Overall stats
 
 get_total_day(sum, col_points)
 get_total_day(mean, col_points)
@@ -14,8 +23,8 @@ get_total_day(mean, col_items)
 ################################################################################
 # Totals cumulative
 
-stats_total_cum <- get_cum(col_points)
-stats_items_cum <- get_cum(col_items)
+stats_total_cum <- get_column(col_points)
+stats_items_cum <- get_column(col_items)
 
 plot_cum(stats_total_cum, "Points")
 plot_cum(stats_items_cum, "Items")
@@ -23,8 +32,8 @@ plot_cum(stats_items_cum, "Items")
 ################################################################################
 # Totals absolute
 
-stats_total_abs <- get_abs(col_points)
-stats_items_abs <- get_abs(col_items)
+stats_total_abs <- get_column(col_points)
+stats_items_abs <- get_column(col_items)
 
 plot_daily_abs(stats_total_abs, "Points")
 plot_daily_abs(stats_items_abs, "Items")
@@ -73,4 +82,4 @@ plot_yearly_avg(mem_stats_points.xts, "Points")
 ################################################################################
 # Plot followersing
 
-plot_followersing()
+plot_followersing(memstats_followersing)

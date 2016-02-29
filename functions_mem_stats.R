@@ -2,6 +2,8 @@
 # All functions operate on the 'mem_stats' data frame which is imported in the 
 # 'setup.R script'
 
+col_date <- 2
+
 create_xts_dataframe <- function(col) {
     # Creates a XTS dataframe with a data and a date column. Requires a 'DATE'
     # column in the input data frame
@@ -23,12 +25,8 @@ split_by_period <- function(period) {
     return(tab)
 }
 
+################################################################################
 # Data subsets
-
-get_followersing <- function() {
-    followersing <- mem_stats[, c(2, 8, 9)]
-    return(followersing)
-}
 
 get_period_subset <- function(mem_stats, period) {
     period_bounds <- get_period_bounds(period)
@@ -36,17 +34,13 @@ get_period_subset <- function(mem_stats, period) {
     return(mem_stats_sub)
 }
 
+get_columns <- function(cols) {
+    # Returns the requested columns and the date column
+    return(mem_stats[, c(col_date, cols)])
+}
+
 ################################################################################
-
-get_cum <- function(col) {
-    mem_stats_points_tot <- mem_stats[, c(2, col)]
-    return(mem_stats_points_tot)
-}
-
-get_abs <- function(col) {
-    mem_stats_abs <- mem_stats[, c(2, col)]
-    return(mem_stats_abs)
-}
+# Single stats
 
 get_total_day <- function(fun, col) {
     print(fun(mem_stats[, c(col)], na.rm=TRUE))

@@ -223,10 +223,8 @@ plot_yearly_avg <- function(stats_xts, y_type) {
 
 ################################################################################
 
-plot_followersing <- function(stats) {
-    
-    followersing <- get_followersing()
-    
+plot_followersing <- function(followersing) {
+
     # Plot the graph
     mem_stats_plot <- ggplot() +
         geom_line(data=followersing, aes(x=DATE, y=FOLLOWERS, color="green")) +
