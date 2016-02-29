@@ -30,41 +30,6 @@ get_data <- function(file) {
     return(mem_stats)
 }
 
-# Data subsets
-get_cum <- function(col) {
-    mem_stats_points_tot <- mem_stats[, c(2, col)]
-    return(mem_stats_points_tot)
-}
-
-get_abs <- function(col) {
-    mem_stats_abs <- mem_stats[, c(2, col)]
-    return(mem_stats_abs)
-}
-
-get_followersing <- function(mem_stats) {
-    mem_stats_items_abs <- mem_stats[, c(2, 8, 9)]
-    return(mem_stats_items_abs)
-}
-
-get_subset <- function(mem_stats, period) {
-    
-    period_bounds <- get_period_bounds(period)
-
-    mem_stats_sub <- subset(mem_stats, DATE >= as.Date("2015-10-15") & DATE <= as.Date("2015-10-20"))
-    
-    return(mem_stats_sub)
-}
-
-get_points_total_avg_day <- function(mem_stats) {
-    points_total_avg <- get_points_abs(mem_stats)
-    print(mean(points_total_avg$POINTS_ABS, na.rm=TRUE))
-}
-
-get_items_total_avg_day <- function(mem_stats) {
-    items_total_avg <- get_items_abs(mem_stats)
-    print(mean(items_total_avg$ITEMS_ABS, na.rm=TRUE))
-}
-
 save_plot <- function(plot, name){
     print(plot)
     file <- paste("output/plots/", name, ".png", sep = "")
@@ -73,21 +38,6 @@ save_plot <- function(plot, name){
     dev.off()
 }
 
-create_xts_dataframe <- function(col) {
-    df.xts <- xts(mem_stats[, c(col)], order.by = mem_stats[, "DATE"])
-    return(df.xts)
-}
-
 get_filename <- function(dir, a, b) {
     return(paste(dir, paste(tolower(a), b, sep="_"), sep =""))
-}
-
-split_by_period <- function(df, period) {
-    split_period <- switch(period,
-                           week = "%W",
-                           month = "%m",
-                           year = "%Y")
-    
-    tab <- split(df, format(df$DATE, split_period))
-    return(tab)
 }

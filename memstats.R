@@ -3,14 +3,19 @@ source("setup.R")
 ################################################################################
 # Overall stats
 
-get_points_total_avg_day(mem_stats)
-get_items_total_avg_day(mem_stats)
+col_points <- 10
+col_items <- 11
+
+get_total_day(sum, col_points)
+get_total_day(mean, col_points)
+get_total_day(sum, col_items)
+get_total_day(mean, col_items)
 
 ################################################################################
 # Totals cumulative
 
-stats_total_cum <- get_points_cum(mem_stats)
-stats_items_cum <- get_items_cum(mem_stats)
+stats_total_cum <- get_cum(col_points)
+stats_items_cum <- get_cum(col_items)
 
 plot_cum(stats_total_cum, "Points")
 plot_cum(stats_items_cum, "Items")
@@ -18,16 +23,16 @@ plot_cum(stats_items_cum, "Items")
 ################################################################################
 # Totals absolute
 
-stats_total_abs <- get_points_abs(mem_stats)
-stats_items_abs <- get_items_abs(mem_stats)
+stats_total_abs <- get_abs(col_points)
+stats_items_abs <- get_abs(col_items)
 
 plot_daily_abs(stats_total_abs, "Points")
 plot_daily_abs(stats_items_abs, "Items")
 
 # Total averages per period
 
-mem_stats_points.xts <- xts(mem_stats[, c(10)], order.by = mem_stats[, "DATE"])
-mem_stats_items.xts <- xts(mem_stats[, c(11)], order.by = mem_stats[, "DATE"])
+mem_stats_points.xts <- create_xts_dataframe(col_points)
+mem_stats_items.xts <- create_xts_dataframe(col_items)
 
 plot_weekly_avg(mem_stats_items.xts, "Items")
 plot_monthly_avg(mem_stats_items.xts, "Items")
@@ -68,4 +73,4 @@ plot_yearly_avg(mem_stats_points.xts, "Points")
 ################################################################################
 # Plot followersing
 
-plot_followersing(mem_stats)
+plot_followersing()

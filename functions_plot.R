@@ -225,7 +225,7 @@ plot_yearly_avg <- function(stats_xts, y_type) {
 
 plot_followersing <- function(stats) {
     
-    followersing <- get_followersing(stats)
+    followersing <- get_followersing()
     
     # Plot the graph
     mem_stats_plot <- ggplot() +
@@ -240,4 +240,43 @@ plot_followersing <- function(stats) {
         labs(title = "Memrise followers and following")
     
     save_plot(mem_stats_plot, "followersing")
+}
+
+################################################################################
+
+per_month <- function(stats_xts, y_type, fun) {
+    
+    stats <- apply.monthly(stats_xts, fun, na.rm=TRUE)
+    
+    df.stats <- data.frame(DATE = index(stats), stats[, c(1)], row.names = NULL)
+    
+    plot_month(df.stats, y_type)
+}
+    
+plot_month <- function(df, y_type) {
+    # Plot the graph
+    stats_plot <- ggplot(df, aes(x=DATE, y=df[, c(2)])) +
+        geom_line(colour = "red", size = 0.5) +
+        labs(x = "Week") +
+        scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
+                     labels=date_format("%b %y")) +
+        labs(y = y_type) +
+        scale_y_continuous(labels = comma) +
+        labs(title = paste("Memrise", y_type,"(average per month)", sep=" "))
+    
+    save_plot(stats_plot, paste(tolower(y_type), "avg_month", sep="_"))
+}
+
+plot_week <- function(df, y_type) {
+    # Plot the graph
+    stats_plot <- ggplot(df, aes(x=DATE, y=df[, c(2)])) +
+        geom_line(colour = "red", size = 0.5) +
+        labs(x = "Week") +
+        scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
+                     labels=date_format("%b %y")) +
+        labs(y = y_type) +
+        scale_y_continuous(labels = comma) +
+        labs(title = paste("Memrise", y_type,"(average per week)", sep=" "))
+    
+    save_plot(stats_plot, paste(tolower(y_type), "avg_week", sep="_"))
 }
