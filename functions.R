@@ -53,7 +53,7 @@ get_per_period <- function(stats, period, fun, dir){
     
     # Create label sum/mean_per_week/month/quarter/year
     label <- switch(as.character(match.call()[4]),
-                    sum = paste(dir, "sum_per", period, sep="_"),
+                    sum = paste(dir, "sum", sep="_"),
                     mean = paste(dir, "mean_per", period, sep="_")
                     )
     
