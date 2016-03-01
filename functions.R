@@ -209,9 +209,9 @@ get_total <- function(stats) {
     sum_quarterly_items <- get_sum_quarterly(abs_items, dir_quarterly)
     
     # Quarterly means
-    get_mean_quarterly(sum_quarterly_points, dir_quarterly)
+    get_mean_yearly(sum_quarterly_points, dir_quarterly)
     
-    get_mean_quarterly(sum_quarterly_items, dir_quarterly)
+    get_mean_yearly(sum_quarterly_items, dir_quarterly)
     
     mean_quarterly_points <- get_mean(sum_quarterly_points)
     mean_quarterly_items <- get_mean(sum_quarterly_items)
