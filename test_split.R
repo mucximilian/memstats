@@ -5,9 +5,9 @@ source("setup.R")
 df <- get_columns(10)
 df.split <- get_period_splits(df, "month")
 
-test <- function(x, col){
+test <- function(x){
     print("##########################################")
-    print(head(x))
+    print(colnames(x)[2])
 }
 
-lapply(df.split, test, col=10)
+lapply(df.split, test)

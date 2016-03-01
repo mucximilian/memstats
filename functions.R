@@ -1,39 +1,11 @@
-# Read and format CSV File
-get_data <- function(file) {
-    mem_stats <- read.csv(file, header = FALSE, 
-                          sep = ",", na.strings = "NULL")
-    
-    colnames(mem_stats) <- c(
-        "ID",
-        "DATE",
-        "POINTS_TOTAL",
-        "POINTS_DAY",
-        "POINTS_MONTH",
-        "POINTS_WEEK",
-        "ITEMS_TOTAL",
-        "FOLLOWERS",
-        "FOLLOWING"
-    )
-    
-    # Order by ID and format date
-    mem_stats <- mem_stats[order(mem_stats$ID), ]
-    mem_stats$DATE <- as.Date(mem_stats$DATE , "%Y-%m-%d %H:%M:%S")
-    
-    # Computing absolute point and item diffs
-    mem_stats$POINTS_ABS <- c(NA, mem_stats[2:nrow(mem_stats), 3] - mem_stats[1:(nrow(mem_stats)-1), 3])
-    mem_stats$ITEMS_ABS <- c(NA, mem_stats[2:nrow(mem_stats), 7] - mem_stats[1:(nrow(mem_stats)-1), 7])
-    
-    # Replacing NAs with zero
-    mem_stats$POINTS_ABS[is.na(mem_stats$POINTS_ABS)] <- 0
-    mem_stats$ITEMS_ABS[is.na(mem_stats$ITEMS_ABS)] <- 0
-    
-    return(mem_stats)
-}
-
-
-
 get_filename <- function(dir, a, b) {
     return(paste(dir, paste(tolower(a), b, sep="_"), sep =""))
+}
+
+get_y_label <- function(colname) {
+    colname <- gsub("_", " ", tolower(colname))
+    y_label <- unlist(strsplit(colname, " "))[1]
+    return(y_label)
 }
 
 create_xts_dataframe <- function(df) {
@@ -60,43 +32,95 @@ get_period_splits <- function(df, period, col=1) {
     return(tab)
 }
 
-get_per_period <- function(stats, period, fun){
+get_per_period <- function(stats, period, fun, label){
+    
+    colnames_in = colnames(stats)
+    
     stats.xts <- create_xts_dataframe(stats)
-    stats <- switch(period,
-                    year = apply.yearly(stats.xts, fun, na.rm=TRUE),
-                    quarter = apply.quarterly(stats.xts, fun, na.rm=TRUE),
-                    month = apply.monthly(stats.xts, fun, na.rm=TRUE),
-                    week = apply.weekly(stats.xts, fun, na.rm=TRUE)
-                    )
+
+    stats_period <- switch(period,
+                    year = get_per_year(stats.xts, fun),
+                    quarter = get_per_quarter(stats.xts, fun),
+                    month = get_per_month(stats.xts, fun),
+                    week = get_per_week(stats.xts, fun)
+    )
+    
+    stats_period.idx <- data.frame(
+        DATE = index(stats_period),
+        stats_period[, c(1)], 
+        row.names = NULL
+    )
+    
+    colnames(stats_period.idx) <- colnames_in
+    
+    plot_daily_graph(stats_period.idx, label)
+}
+
+get_per_year <- function(stats.xts, fun) {
+    return(apply.yearly(stats.xts, fun, na.rm=TRUE))
+}
+
+get_per_quarter <- function(stats.xts, fun) {
+    return(apply.quarterly(stats.xts, fun, na.rm=TRUE))
+}
+
+get_per_month <- function(stats.xts, fun) {
+    return(apply.monthly(stats.xts, fun, na.rm=TRUE))
+}
+
+get_per_week <- function(stats.xts, fun) {
+    return(apply.weekly(stats.xts, fun, na.rm=TRUE))
+}
+
+################################################################################
+
+get_stats_total <- function(stats, fun, label){
     
     print(head(stats))
+    
+    per_year <- get_per_period(stats, "year", fun, paste(label, "per_year", sep="_"))
+    
+    get_stats_year(stats, fun, label)
 }
 
-get_stats_total <- function(stats, fun){
-    get_per_period(stats, "year", fun)
-    get_stats_year(stats, fun)
+get_stats_year <- function(stats, fun, label){
+    per_quarter <- get_per_period(stats, "quarter", fun, paste(label, "per_quarter", sep="_"))
+    per_month <- get_per_period(stats, "month", fun, paste(label, "per_month", sep="_"))
+    
+    get_stats_month(stats, fun, label)
 }
 
-get_stats_year <- function(stats, fun){
-    get_per_period(stats, "quarter", fun)
-    get_per_period(stats, "month", fun)
-    get_stats_month(stats, fun)
+get_stats_month <- function(stats, fun, label){
+    per_week <- get_per_period(stats, "week", fun, paste(label, "per_week", sep="_"))
+    
+    get_stats_week(stats, fun, label)
 }
 
-get_stats_month <- function(stats, fun){
-    get_per_period(stats, "week", fun)
-    get_stats_week(stats, fun)
+get_stats_week <- function(stats, fun, label){
+    per_day <- get_per_day(stats, paste(label, "per_day", sep="_"))
 }
 
-get_stats_week <- function(stats, fun){
-    get_per_day(stats, fun)
+get_per_day <- function(stats, label) {
+    plot_daily_scatterplot(stats, label)
 }
 
-get_total <- function(stats){
-    get_stats_total(stats, sum)
-    get_stats_total(stats, mean)
+################################################################################
+
+
+get_total <- function(stats) {
+    plot_daily_graph(stats[,c(1,2)], "total/cum") # Points cumulative
+    plot_daily_graph(stats[,c(1,4)], "total/cum") # Items cumulative
+
+    get_stats_total(stats[,c(1,3)], sum, "total/abs_sum")
+    get_stats_total(stats[,c(1,5)], sum, "total/abs_sum")
+    get_stats_total(stats[,c(1,3)], mean, "total/daily_mean")
+    get_stats_total(stats[,c(1,5)], mean, "total/daily_mean")
 }
 
-get_cum <- function(stats){
-    get_stats_total(stats, sum)
+split_by_year <- function(stats) {
+    stats.split <- get_period_splits(stats, "year")
+    
+    lapply(stats.split, plot_cum)
+    lapply(stats.split, get_stats_year, fun=sum)
+    lapply(stats.split, get_stats_year, fun=mean)
 }

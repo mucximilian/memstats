@@ -1,9 +1,3 @@
-library(xts)
-library(ggplot2)
-library(scales)
-
-source("functions.R")
-
 ################################################################################
 save_plot <- function(plot, name){
     print(plot)
@@ -15,26 +9,30 @@ save_plot <- function(plot, name){
 
 ################################################################################
 
-# Cumulative plot
-plot_cum <- function(stats, y_type) {
+# Graph plot (for comulative and average data)
+plot_daily_graph <- function(stats, label) {
+    
+    y_label <- get_y_label(colnames(stats)[2])
 
     # Plot the graph
-    stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
+    stats_plot <- ggplot(stats, aes(x=stats[, c(1)], y=stats[, c(2)])) +
         geom_line(colour = "red", size = 0.5) +
         labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = y_type) +
+        labs(y = y_label) +
         scale_y_continuous(labels = comma) +
-        labs(title = paste("Memrise", y_type,"cumulative (all-time)", sep=" "))
+        labs(title = paste("Memrise", y_label,"cumulative (all-time)", sep=" "))
     
-    save_plot(stats_plot, paste(tolower(y_type), "total_cum", sep="_"))
+    save_plot(stats_plot, paste(label, tolower(y_label), sep="_"))
 }
 
 ################################################################################
 # Functions for total plots
 
-plot_daily_abs <- function(stats, y_type, dir="") {
+plot_daily_scatterplot <- function(stats, label) {
+    
+    y_label <- get_y_label(colnames(stats)[2])
     
     # Plot the graph
     stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
@@ -45,12 +43,11 @@ plot_daily_abs <- function(stats, y_type, dir="") {
         labs(x = "Day") +
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
-        labs(y = y_type) +
+        labs(y = y_label) +
         scale_y_continuous(labels = comma) +
-        labs(title = paste("Memrise", y_type,"per day (all-time)", sep=" "))
+        labs(title = paste("Memrise", y_label,"per day (all-time)", sep=" "))
     
-    file <- get_filename(dir, y_type, "abs_day")
-    save_plot(stats_plot, file)
+    save_plot(stats_plot, paste(label, tolower(y_label), sep="_"))
 }
 
 plot_weekly_abs <- function(stats_xts ,y_type, dir="") {
