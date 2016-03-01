@@ -19,23 +19,24 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 
 ##TO DOs
 
-* Period subsets (all weeks, months, quarters, years) for points/items with averages with graphs
+* Period subsets (all weeks, months, quarters, years) for points/items with averages and graphs
 * Adding output CSV with statistical summary
 * Enable direct access to a MySQL database (would require no CSV file)
 * Time (x-axis) labels in English
+* More variety in the output plot types (currently only two types are implemented)
 
 ##Examples
 
 ###Cumulative overall results
-![Total points](./output/plots/points_total_cum.png)
-![Total items](./output/plots/items_total_cum.png)
+![Total points](./output/plots/total/daily_cum_points.png)
+![Total items](./output/plots/total/daily_cum_items.png)
 
 ###Overall results (per day)
-![Points per day](./output/plots/points_total_abs.png)
-![Items per day](./output/plots/items_total_abs.png)
+![Points per day](./output/plots/total/daily_abs_points.png)
+![Items per day](./output/plots/total/daily_abs_items.png)
 
 ###Number of total followers/-ing
-![Total followers/-ing](./output/plots/followersing.png)
+![Total followers/-ing](./output/plots/total/followersing.png)
 
 * * *
 License: GNU GENERAL PUBLIC LICENSE
