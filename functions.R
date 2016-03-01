@@ -203,6 +203,8 @@ get_total <- function(stats) {
     
     print(mean_yearly_points)
     print(mean_yearly_items)
+    
+    plot_followersing(stats[,c(1,6,7)], dir)
 }
 
 get_year <- function(stats) {

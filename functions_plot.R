@@ -52,7 +52,7 @@ plot_daily_scatterplot <- function(stats, label) {
 
 
 
-plot_followersing <- function(followersing) {
+plot_followersing <- function(followersing, dir) {
 
     # Plot the graph
     mem_stats_plot <- ggplot() +
@@ -66,5 +66,5 @@ plot_followersing <- function(followersing) {
         scale_y_continuous(labels = comma) +
         labs(title = "Memrise followers and following")
     
-    save_plot(mem_stats_plot, "followersing")
+    save_plot(mem_stats_plot, paste(dir, "followersing", sep = "/"))
 }
