@@ -102,7 +102,7 @@ get_sum <- function(stats){
 # Input data processing functions for period
 #
 # TO DOs:
-# - Reducing redundance by function nesting
+# - Check if possible to reduce redundancy by function nesting
 
 get_total <- function(stats) {
     
@@ -211,10 +211,6 @@ get_total <- function(stats) {
     
     ############################################################################
     # Single values output
-    #
-    # TO DOs:
-    # - Save to CSV
-    
     stats_total <- data.frame(
         sum_points,
         sum_items,
@@ -325,10 +321,6 @@ get_year <- function(stats) {
     
     ############################################################################
     # Single values output
-    #
-    # TO DOs:
-    # - Save to CSV
-    
     stats_total <- data.frame(
         sum_points,
         sum_items,
@@ -396,10 +388,6 @@ get_month <- function(stats) {
 
     ############################################################################
     # Single values output
-    #
-    # TO DOs:
-    # - Save to CSV
-    
     stats_total <- data.frame(
         sum_points,
         sum_items,
@@ -447,10 +435,6 @@ get_week <- function(stats) {
     
     ############################################################################
     # Single values output
-    #
-    # TO DOs:
-    # - Save to CSV
-    
     stats_total <- data.frame(
         sum_points,
         sum_items,

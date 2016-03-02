@@ -4,10 +4,10 @@ source("setup.R")
 get_total(memstats)
 
 # Stats per year
-# split_by_period(memstats, "year")
+split_by_period(memstats, "year")
 
 # # # Stats per month
-# split_by_period(memstats, "month")
+split_by_period(memstats, "month")
 
 # # # Stats per week
-# split_by_period(memstats, "week")
+split_by_period(memstats, "week")

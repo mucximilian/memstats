@@ -97,7 +97,8 @@ plot_daily_graph <- function(stats, label, point=TRUE) {
 
 # Scatterplot with indicated mean
 plot_daily_scatterplot <- function(stats, label) {
-    
+    # TO DO:
+    # Dispaly numeric mean value in plot
     labels <- get_labels(stats, label)
 
     stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
