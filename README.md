@@ -4,7 +4,7 @@ A collection of R scripts that analyze and plot my recorded learning progress an
 
 ##About
 
-Since March 2015, I keep track of my Memrise learning performance (this is my [Memrise profile](http://www.memrise.com/user/mucx)). Getting more diverse stats about my learning than the ones available on the profile page keeps me motivated. I can define new goals regularly, like aiming for the rise of a certain mean value. For example, keeping the overall mean of points per day at a certain amount.
+Since March 2015, I keep records of my Memrise learning performance (this is my [Memrise profile](http://www.memrise.com/user/mucx)). I figured out that getting more diverse stats about my learning than the ones available on the profile page keeps me motivated. I can aim for new goals regularly, like rising a certain mean value. For example, keeping the overall mean of points per day at a certain amount.
 
 A cron-job controlled PHP script obtains the raw learning data from the API and stores it into a MySQL database (__Note:__ The PHP script is not part of the repository). Using the quick export function of _PHPMyAdmin_, a CSV file can be created containing the following data:
 
@@ -17,7 +17,12 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 * FOLLOWERS:    Number of followers
 * FOLLOWING:    Number of people I follow
 
-A variety of statistic values is computed for the this data and each period subset (year, month, week) when the script is executed. The data is displayed in different graphs and summaries are stored as CSV files.
+The statistic values of the cumulative/absolute sums and means are computed for the entire dataset and each period subset (year, month, week) when the script is executed. Various graphs visualize the data and summaries are stored in CSV files. There are the following amount of plotted values:
+
+*33 on the total data
+*23 per yer
+*9 per month
+*5 per week
 
 If you want me to keep track of your Memrise learning progress as well, just contact me!
 
