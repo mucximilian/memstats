@@ -58,7 +58,7 @@ get_period_subset <- function(memstats, period) {
     return(memstats_sub)
 }
 
-get_columns <- function(cols) {
-    # Returns the requested columns and the date column
-    return(memstats[, c(col_date, cols)])
+get_columns_with_date <- function(cols) {
+    # Returns the requested columns and the date column which is column 1
+    return(memstats[, c(1, cols)])
 }
