@@ -27,9 +27,7 @@ get_per_period <- function(stats, period, fun, dir){
     
     # Plot the data
     plot_daily_graph(stats_per_period, label)
-    
-    print(stats_per_period)
-    
+
     return(stats_per_period)
 }
 
@@ -213,6 +211,8 @@ get_total <- function(stats) {
     stats_total <- data.frame(
         sum_points,
         sum_items,
+        mean_daily_points,
+        mean_daily_items,
         mean_weekly_points,
         mean_weekly_items,
         mean_monthly_points,
@@ -303,6 +303,31 @@ get_year <- function(stats) {
     # Quarter sums
     sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir)
     sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir)
+    
+    ############################################################################
+    # Single values output
+    #
+    # TO DOs:
+    # - Save to CSV
+    
+    stats_total <- data.frame(
+        sum_points,
+        sum_items,
+        mean_daily_points,
+        mean_daily_items,
+        mean_weekly_points,
+        mean_weekly_items,
+        mean_monthly_points,
+        mean_monthly_items,
+        mean_quarterly_points,
+        mean_quarterly_items
+    )
+    
+    print(stats_total)
+    
+    ############################################################################
+    # Folwoers/-ing
+    plot_followersing(stats[,c(1,6,7)], dir)
 }
 
 get_month <- function(stats) {
@@ -339,6 +364,27 @@ get_month <- function(stats) {
     # Week sums
     sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
     sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
+    
+    ############################################################################
+    # Single values output
+    #
+    # TO DOs:
+    # - Save to CSV
+    
+    stats_total <- data.frame(
+        sum_points,
+        sum_items,
+        mean_daily_points,
+        mean_daily_items,
+        mean_weekly_points,
+        mean_weekly_items
+    )
+    
+    print(stats_total)
+    
+    ############################################################################
+    # Folwoers/-ing
+    plot_followersing(stats[,c(1,6,7)], dir)
 }
 
 get_week <- function(stats) {
@@ -353,6 +399,33 @@ get_week <- function(stats) {
     # Absolute per day
     abs_points <- get_abs(stats, path_daily, "points")
     abs_items <- get_abs(stats, path_daily, "items")
+    
+    # Day sums
+    sum_points <- get_sum(abs_points)
+    sum_items <- get_sum(abs_items)
+    
+    # Day means overall
+    mean_daily_points <- get_mean(abs_points)
+    mean_daily_items <- get_mean(abs_items)
+    
+    ############################################################################
+    # Single values output
+    #
+    # TO DOs:
+    # - Save to CSV
+    
+    stats_total <- data.frame(
+        sum_points,
+        sum_items,
+        mean_daily_points,
+        mean_daily_items
+    )
+    
+    print(stats_total)
+    
+    ############################################################################
+    # Folwoers/-ing
+    plot_followersing(stats[,c(1,6,7)], dir)
 }
 
 ################################################################################
@@ -381,8 +454,8 @@ split_by_period <- function(stats, period) {
     
     switch(
         period,
-        year = get_year(stats),
-        month = get_month(stats),
-        week = get_week(stats)
+        year = lapply(stats, get_year),
+        month = lapply(stats, get_month),
+        week = lapply(stats, get_week)
     )
 }
