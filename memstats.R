@@ -1,6 +1,6 @@
-source("setup.R")
+file <- "input/csv/memrise_stats_20160301.csv"
 
-print(head(memstats))
+source("setup.R")
 
 # Overall stats
 get_total(memstats)

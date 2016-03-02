@@ -8,8 +8,6 @@ source("functions_memstats.R")
 source("functions_plot.R")
 
 # TO DO:
-# Create directory structure if not existing
-
-file <- "input/csv/memrise_stats_20160301.csv"
+# Check and create directory structure if not existing
 
 memstats <- get_data(file)
