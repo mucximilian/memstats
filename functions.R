@@ -4,6 +4,50 @@
 # actual plotting
 #
 ################################################################################
+
+# Read and format CSV File
+get_data <- function(file) {
+    memstats <- read.csv(file, header = FALSE, 
+                         sep = ",", na.strings = "NULL")
+    
+    colnames(memstats) <- c(
+        "ID",
+        "DATE",
+        "POINTS_TOTAL",
+        "POINTS_DAY",
+        "POINTS_MONTH",
+        "POINTS_WEEK",
+        "ITEMS_TOTAL",
+        "FOLLOWERS",
+        "FOLLOWING"
+    )
+    
+    # Order by ID and format date
+    memstats <- memstats[order(memstats$ID), ]
+    memstats$DATE <- as.Date(memstats$DATE , "%Y-%m-%d %H:%M:%S")
+    
+    # Computing absolute point and item diffs
+    memstats$POINTS <- c(NA, memstats[2:nrow(memstats), 3] - memstats[1:(nrow(memstats)-1), 3])
+    memstats$ITEMS <- c(NA, memstats[2:nrow(memstats), 7] - memstats[1:(nrow(memstats)-1), 7])
+    
+    # Replacing NAs with zero
+    memstats$POINTS[is.na(memstats$POINTS)] <- 0
+    memstats$ITEMS[is.na(memstats$ITEMS)] <- 0
+    
+    memstats_sub <- memstats[,c(
+        "DATE",
+        "POINTS_TOTAL",
+        "POINTS",
+        "ITEMS_TOTAL",
+        "ITEMS",
+        "FOLLOWERS",
+        "FOLLOWING"
+    )]
+    
+    return(memstats_sub)
+}
+
+################################################################################
 # Functions for data preparation
 
 create_xts_dataframe <- function(df) {
@@ -14,7 +58,19 @@ create_xts_dataframe <- function(df) {
     return(df)
 }
 
+get_period_subset <- function(memstats, period) {
+    # This is only a test
+    #
+    # TO DO: Necessary to implement the function:
+    # period_bounds <- get_period_bounds(period)
+    
+    memstats_sub <- subset(memstats, DATE >= as.Date("2015-10-15") & DATE <= as.Date("2015-10-20"))
+    return(memstats_sub)
+}
+
 get_per_period <- function(stats, period, fun, dir){
+    # Plot and return the output of a function applied to the input data on 
+    # specified period
     
     stats_per_period <- apply_per_period(stats, paste(period, "s", sep=""), fun)
     
@@ -74,12 +130,13 @@ apply_per_period <- function(stats, period, fun) {
 }
 
 get_cum <- function(stats, label) {
-    plot_daily_graph(stats[,c(1,2)], paste(label, "cum", sep="_"), FALSE) # Points
-    plot_daily_graph(stats[,c(1,4)], paste(label, "cum", sep="_"), FALSE) # Items
+    # Plot the cumulative sum of point and item data 
+    plot_daily_graph(stats[,c(1,2)], paste(label, "cum", sep="_"), FALSE)
+    plot_daily_graph(stats[,c(1,4)], paste(label, "cum", sep="_"), FALSE)
 }
 
 get_abs <- function(stats, label, type) {
-    
+    # Plot and return the absolute values of point or item data
     stats_abs <- switch(
         type,
         points = stats[,c(1,3)],
@@ -91,6 +148,7 @@ get_abs <- function(stats, label, type) {
 }
 
 get_mean <- function(stats) {
+    
     return(mean(stats[,c(2)]))
 }
 
@@ -484,7 +542,7 @@ split_by_period <- function(stats, period) {
 }
 
 ################################################################################
-
+# Create CSV output
 save_as_csv <- function(stats, dir) {
     
     # Saving a data frame in the specified directory as CSV file     
