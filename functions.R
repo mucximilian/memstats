@@ -28,6 +28,8 @@ get_per_period <- function(stats, period, fun, dir){
     # Plot the data
     plot_daily_graph(stats_per_period, label)
     
+    print(stats_per_period)
+    
     return(stats_per_period)
 }
 
@@ -78,8 +80,16 @@ get_cum <- function(stats, label) {
     plot_daily_graph(stats[,c(1,4)], paste(label, "cum", sep="_")) # Items
 }
 
-get_abs <- function(stats, label) {
-    plot_daily_scatterplot(stats, paste(label, "abs", sep="_"))
+get_abs <- function(stats, label, type) {
+    
+    stats_abs <- switch(
+        type,
+        points = stats[,c(1,3)],
+        items = stats[,c(1,5)]
+    )
+    
+    plot_daily_scatterplot(stats_abs, paste(label, "abs", sep="_"))
+    return(stats_abs)
 }
 
 get_mean <- function(stats) {
@@ -92,100 +102,105 @@ get_sum <- function(stats){
 
 ################################################################################
 # Input data processing functions for period
+#
+# TO DOs:
+# - Reducing redundance by function nesting
 
 get_total <- function(stats) {
     
     dir <- "total/"
     
-    abs_points <- stats[,c(1,3)]
-    abs_items <- stats[,c(1,5)]
-    
     ############################################################################
-    dir_daily = paste(dir, "daily", sep="")
+    path_daily = paste(dir, "daily", sep="")
     
-    # Total sums of all days
+    # Cumulative per day
+    get_cum(stats, path_daily)
+    
+    # Absolute per day
+    abs_points <- get_abs(stats, path_daily, "points")
+    abs_items <- get_abs(stats, path_daily, "items")
+    
+    # Day sums
     sum_points <- get_sum(abs_points)
     sum_items <- get_sum(abs_items)
     
-    # Cumulative per day
-    get_cum(stats, dir_daily)
-    
-    # Absolute per day
-    get_abs(abs_points, dir_daily)
-    get_abs(abs_items, dir_daily)
-    
-    # Daily means
-    get_per_period(abs_points, "week", mean, dir_daily)
-    get_per_period(abs_points, "month", mean, dir_daily)
-    get_per_period(abs_points, "quarter", mean, dir_daily)
-    get_per_period(abs_points, "year", mean, dir_daily)
-    
-    get_per_period(abs_items, "week", mean, dir_daily)
-    get_per_period(abs_items, "month", mean, dir_daily)
-    get_per_period(abs_items, "quarter", mean, dir_daily)
-    get_per_period(abs_items, "year", mean, dir_daily)
-    
+    # Day means overall
     mean_daily_points <- get_mean(abs_points)
     mean_daily_items <- get_mean(abs_items)
     
+    # Daily means per period
+    get_per_period(abs_points, "week", mean, path_daily)
+    get_per_period(abs_points, "month", mean, path_daily)
+    get_per_period(abs_points, "quarter", mean, path_daily)
+    get_per_period(abs_points, "year", mean, path_daily)
+    
+    get_per_period(abs_items, "week", mean, path_daily)
+    get_per_period(abs_items, "month", mean, path_daily)
+    get_per_period(abs_items, "quarter", mean, path_daily)
+    get_per_period(abs_items, "year", mean, path_daily)
+    
     ############################################################################
-    dir_weekly = paste(dir, "weekly", sep="")
+    path_weekly = paste(dir, "weekly", sep="")
     
     # Week sums
     sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
     sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
     
-    # Weekly means
-    get_per_period(sum_weekly_points, "month", mean, dir_weekly)
-    get_per_period(sum_weekly_points, "quarter", mean, dir_weekly)
-    get_per_period(sum_weekly_points, "year", mean, dir_weekly)
-    
-    get_per_period(sum_weekly_items, "month", mean, dir_weekly)
-    get_per_period(sum_weekly_items, "quarter", mean, dir_weekly)
-    get_per_period(sum_weekly_items, "year", mean, dir_weekly)
-    
+    # Week means overall
     mean_weekly_points <- get_mean(sum_weekly_points)
     mean_weekly_items <- get_mean(sum_weekly_items)
     
+    # Weekly means per period
+    get_per_period(sum_weekly_points, "month", mean, path_weekly)
+    get_per_period(sum_weekly_points, "quarter", mean, path_weekly)
+    get_per_period(sum_weekly_points, "year", mean, path_weekly)
+    
+    get_per_period(sum_weekly_items, "month", mean, path_weekly)
+    get_per_period(sum_weekly_items, "quarter", mean, path_weekly)
+    get_per_period(sum_weekly_items, "year", mean, path_weekly)
+    
     ############################################################################
-    dir_monthly = paste(dir, "monthly", sep="")
+    path_monthly = paste(dir, "monthly", sep="")
     
     # Month sums
     sum_monthly_points <- get_per_period(abs_points, "month", sum, dir)
     sum_monthly_items <- get_per_period(abs_items, "month", sum, dir)
     
-    # Monthly means
-    get_per_period(sum_monthly_points, "quarter", mean, dir_monthly)
-    get_per_period(sum_monthly_points, "year", mean, dir_monthly)
-    
-    get_per_period(sum_monthly_items, "quarter", mean, dir_monthly)
-    get_per_period(sum_monthly_items, "year", mean, dir_monthly)
-    
+    # Month means overall
     mean_monthly_points <- get_mean(sum_monthly_points)
     mean_monthly_items <- get_mean(sum_monthly_items)
     
+    # Monthly means per period sum
+    get_per_period(sum_monthly_points, "quarter", mean, path_monthly)
+    get_per_period(sum_monthly_points, "year", mean, path_monthly)
+    
+    get_per_period(sum_monthly_items, "quarter", mean, path_monthly)
+    get_per_period(sum_monthly_items, "year", mean, path_monthly)
+    
     ############################################################################
-    dir_quarterly = paste(dir, "quarterly", sep="")
+    path_quarterly = paste(dir, "quarterly", sep="")
     
     # Quarter sums
     sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir)
     sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir)
     
-    # Quarterly means
-    get_per_period(sum_quarterly_points, "year", mean, dir_quarterly)
-    
-    get_per_period(sum_quarterly_items, "year", mean, dir_quarterly)
-    
+    # Quarter means overall
     mean_quarterly_points <- get_mean(sum_quarterly_points)
     mean_quarterly_items <- get_mean(sum_quarterly_items)
     
+    # Quarterly means per period 
+    get_per_period(sum_quarterly_points, "year", mean, path_quarterly)
+    
+    get_per_period(sum_quarterly_items, "year", mean, path_quarterly)
+    
     ############################################################################
-    dir_annual = paste(dir, "annual", sep="")
+    path_annual = paste(dir, "annual", sep="")
     
     # Year sums
     sum_annual_points <- get_per_period(abs_points, "year", sum, dir)
     sum_annual_items <- get_per_period(abs_items, "year", sum, dir)
     
+    # Year means overall
     mean_annual_points <- get_mean(sum_annual_points)
     mean_annual_items <- get_mean(sum_annual_items)
     
@@ -221,53 +236,73 @@ get_year <- function(stats) {
     
     # TO DO:
     # Get year value and append to dir
-    
-    abs_points <- stats[,c(1,3)]
-    abs_items <- stats[,c(1,5)]
-    
+
     ############################################################################
+    path_daily = paste(dir, "daily", sep="")
+    
     # Cumulative per day
-    get_cum(stats[,c(1,2,4)], dir)
+    get_cum(stats, path_daily)
     
     # Absolute per day
-    get_abs(abs_points, dir)
-    get_abs(abs_items, dir)
+    abs_points <- get_abs(stats, path_daily, "points")
+    abs_items <- get_abs(stats, path_daily, "items")
     
-    # Daily means
-    get_mean_daily_week(abs_points, dir)
-    get_mean_daily_month(abs_points, dir)
-    get_mean_daily_quarter(abs_points, dir)
+    # Day sums
+    sum_points <- get_sum(abs_points)
+    sum_items <- get_sum(abs_items)
     
-    get_mean_daily_week(abs_items, dir)
-    get_mean_daily_month(abs_items, dir)
-    get_mean_daily_quarter(abs_items, dir)
+    # Day means overall
+    mean_daily_points <- get_mean(abs_points)
+    mean_daily_items <- get_mean(abs_items)
+    
+    # Daily means per period
+    get_per_period(abs_points, "week", mean, path_daily)
+    get_per_period(abs_points, "month", mean, path_daily)
+    get_per_period(abs_points, "quarter", mean, path_daily)
+    
+    get_per_period(abs_items, "week", mean, path_daily)
+    get_per_period(abs_items, "month", mean, path_daily)
+    get_per_period(abs_items, "quarter", mean, path_daily)
     
     ############################################################################
+    path_weekly = paste(dir, "weekly", sep="")
+    
     # Week sums
-    sum_weekly_points <- get_sum_weekly(abs_points, dir)
-    sum_weekly_items <- get_sum_weekly(abs_items, dir)
+    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
+    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
     
-    # Weekly means
-    get_mean_weekly_month(sum_weekly_points, dir)
-    get_mean_weekly_quarter(sum_weekly_points, dir)
+    # Week means overall
+    mean_weekly_points <- get_mean(sum_weekly_points)
+    mean_weekly_items <- get_mean(sum_weekly_items)
     
-    get_mean_weekly_month(sum_weekly_items, dir)
-    get_mean_weekly_quarter(sum_weekly_items, dir)
+    # Weekly means per period
+    get_per_period(sum_weekly_points, "month", mean, path_weekly)
+    get_per_period(sum_weekly_points, "quarter", mean, path_weekly)
+    
+    get_per_period(sum_weekly_items, "month", mean, path_weekly)
+    get_per_period(sum_weekly_items, "quarter", mean, path_weekly)
     
     ############################################################################
     # Month sums
-    sum_monthly_points <- get_sum_monthly(abs_points, dir)
-    sum_monthly_items <- get_sum_monthly(abs_items, dir)
+    path_monthly = paste(dir, "monthly", sep="")
     
-    # Monthly means
-    get_mean_monthly_quarter(sum_monthly_points, dir)
+    # Month sums
+    sum_monthly_points <- get_per_period(abs_points, "month", sum, dir)
+    sum_monthly_items <- get_per_period(abs_items, "month", sum, dir)
     
-    get_mean_monthl_quarter(sum_monthly_items, dir)
+    # Month means overall
+    mean_monthly_points <- get_mean(sum_monthly_points)
+    mean_monthly_items <- get_mean(sum_monthly_items)
+    
+    # Monthly means per period sum
+    get_per_period(sum_monthly_points, "quarter", mean, path_monthly)
+    
+    get_per_period(sum_monthly_items, "quarter", mean, path_monthly)
     
     ############################################################################
     # Quarter sums
-    sum_quarterly_points <- get_sum_quarterly(abs_points, dir)
-    sum_quarterly_items <- get_sum_quarterly(abs_items, dir)
+    sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir)
+    sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir)
 }
 
 get_month <- function(stats) {
@@ -276,27 +311,34 @@ get_month <- function(stats) {
     
     # TO DO:
     # Get month value and append to dir
-    
-    abs_points <- stats[,c(1,3)]
-    abs_items <- stats[,c(1,5)]
-    
+
     ############################################################################
+    path_daily = paste(dir, "daily", sep="")
+    
     # Cumulative per day
-    get_cum(stats[,c(1,2,4)], dir)
+    get_cum(stats, path_daily)
     
     # Absolute per day
-    get_abs(abs_points, dir)
-    get_abs(abs_items, dir)
+    abs_points <- get_abs(stats, path_daily, "points")
+    abs_items <- get_abs(stats, path_daily, "items")
     
-    # Daily means
-    get_mean_daily_week(abs_points, dir)
+    # Day sums
+    sum_points <- get_sum(abs_points)
+    sum_items <- get_sum(abs_items)
     
-    get_mean_daily_week(abs_items, dir)
+    # Day means overall
+    mean_daily_points <- get_mean(abs_points)
+    mean_daily_items <- get_mean(abs_items)
     
+    # Daily means per period
+    get_per_period(abs_points, "week", mean, path_daily)
+
+    get_per_period(abs_items, "week", mean, path_daily)
+
     ############################################################################
     # Week sums
-    sum_weekly_points <- get_sum_weekly(abs_points, dir)
-    sum_weekly_items <- get_sum_weekly(abs_items, dir)
+    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
+    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
 }
 
 get_week <- function(stats) {
@@ -304,16 +346,13 @@ get_week <- function(stats) {
     # TO DO:
     # Get week value and append to dir
     
-    abs_points <- stats[,c(1,3)]
-    abs_items <- stats[,c(1,5)]
-    
     ############################################################################
     # Cumulative per day
-    get_cum(stats[,c(1,2,4)], dir)
+    get_cum(stats, path_daily)
     
     # Absolute per day
-    get_abs(abs_points, dir)
-    get_abs(abs_items, dir)
+    abs_points <- get_abs(stats, path_daily, "points")
+    abs_items <- get_abs(stats, path_daily, "items")
 }
 
 ################################################################################
