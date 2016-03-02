@@ -206,6 +206,10 @@ get_total <- function(stats) {
     mean_annual_items <- get_mean(sum_annual_items)
     
     ############################################################################
+    # Followers/-ing
+    plot_followersing(stats[,c(1,6,7)], dir)
+    
+    ############################################################################
     # Single values output
     #
     # TO DOs:
@@ -225,12 +229,8 @@ get_total <- function(stats) {
         mean_annual_points,
         mean_annual_items
     )
-    
-    print(stats_total)
-    
-    ############################################################################
-    # Folwoers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+
+    save_as_csv(stats_total, dir)
 }
 
 get_year <- function(stats) {
@@ -318,6 +318,10 @@ get_year <- function(stats) {
     mean_quarterly_items <- get_mean(sum_quarterly_items)
     
     ############################################################################
+    # Followers/-ing
+    plot_followersing(stats[,c(1,6,7)], dir)
+    
+    ############################################################################
     # Single values output
     #
     # TO DOs:
@@ -336,11 +340,7 @@ get_year <- function(stats) {
         mean_quarterly_items
     )
     
-    print(stats_total)
-    
-    ############################################################################
-    # Folwoers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+    save_as_csv(stats_total, dir)
 }
 
 get_month <- function(stats) {
@@ -387,6 +387,10 @@ get_month <- function(stats) {
     # Week means overall
     mean_weekly_points <- get_mean(sum_weekly_points)
     mean_weekly_items <- get_mean(sum_weekly_items)
+    
+    ############################################################################
+    # Followers/-ing
+    plot_followersing(stats[,c(1,6,7)], dir)
 
     ############################################################################
     # Single values output
@@ -403,11 +407,7 @@ get_month <- function(stats) {
         mean_weekly_items
     )
     
-    print(stats_total)
-    
-    ############################################################################
-    # Folwoers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+    save_as_csv(stats_total, dir)
 }
 
 get_week <- function(stats) {
@@ -440,6 +440,10 @@ get_week <- function(stats) {
     mean_daily_items <- get_mean(abs_items)
     
     ############################################################################
+    # Followers/-ing
+    plot_followersing(stats[,c(1,6,7)], dir)
+    
+    ############################################################################
     # Single values output
     #
     # TO DOs:
@@ -452,11 +456,7 @@ get_week <- function(stats) {
         mean_daily_items
     )
     
-    print(stats_total)
-    
-    ############################################################################
-    # Folwoers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+    save_as_csv(stats_total, dir)
 }
 
 ################################################################################
@@ -483,8 +483,11 @@ split_by_period <- function(stats, period) {
     # for processing
     stats.split <- get_period_splits(stats, period)
     
-    out_dir <- paste("output/plots", period, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
+    out_dir_plots <- paste("output/plots", period, sep="/")
+    dir.create(out_dir_plots, showWarnings = FALSE)
+    
+    out_dir_csv <- paste("output/csv", period, sep="/")
+    dir.create(out_dir_csv, showWarnings = FALSE)
 
     switch(
         period,
@@ -492,4 +495,17 @@ split_by_period <- function(stats, period) {
         month = lapply(stats.split, get_month),
         week = lapply(stats.split, get_week)
     )
+}
+
+################################################################################
+
+save_as_csv <- function(stats, dir) {
+    # Saving a data frame in the specified directory as CSV file     
+    out_dir <- paste("output/csv", dir, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
+    
+    filename <- paste(out_dir, "stats.csv", sep="")
+    write.csv(stats, file = filename, row.names = FALSE)
+    
+    print(paste("Saving stats", filename, sep=" "))
 }
