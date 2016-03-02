@@ -1,5 +1,7 @@
 ################################################################################
-# Plotting related functions
+# 
+# This script contains all plotting related functions
+#
 ################################################################################
 # General functions
 
@@ -8,7 +10,7 @@ get_filename <- function(dir, a, b) {
 }
 
 get_labels <- function(stats, label) {
-    x_label <- "Date"
+    x_label <- "Date" # The X-axis is always the date
     y_label <- get_y_label(colnames(stats)[2])
     title <- get_pretty_title(label, tolower(y_label))
     filename <- paste(label, tolower(y_label), sep="_")
@@ -40,21 +42,22 @@ get_pretty_title <- function(label, y_type) {
 }
 
 get_capitalized <- function(text) {
-    return(
-        paste(
-            toupper(substring(text, 1, 1)),
-            substring(text, 2,),
-            sep=""
-        )
+    text <- paste(
+        toupper(substring(text, 1, 1)),
+        substring(text, 2,),
+        sep=""
     )
+    
+    return(text)
 }
 
 add_plot_labels <- function(plot, labels) {
-    return(plot +
-            labs(x = labels[1]) +
-            labs(y = labels[2]) +
-            labs(title = labels[3])
-            )
+    plot <- plot +
+        labs(x = labels[1]) +
+        labs(y = labels[2]) +
+        labs(title = labels[3])
+
+    return(plot)
 }
 
 save_plot <- function(plot, name){
@@ -66,7 +69,7 @@ save_plot <- function(plot, name){
 }
 
 ################################################################################
-# Plot functions
+# Plotting functions
 
 # Graph plot (for comulative and average data)
 plot_daily_graph <- function(stats, label) {

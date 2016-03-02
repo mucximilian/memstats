@@ -1,5 +1,8 @@
 ################################################################################
 #
+# This script contains the logic for the data subsetting in preparation for the
+# actual plotting
+#
 ################################################################################
 # Functions for data preparation
 
