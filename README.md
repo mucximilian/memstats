@@ -19,10 +19,10 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 
 The statistic values of the cumulative/absolute sums and means are computed for the entire dataset and each period subset (year, month, week) when the script is executed. Various graphs visualize the data and summaries are stored in CSV files. There are the following amount of plotted values:
 
-*33 on the total data
-*23 per yer
-*9 per month
-*5 per week
+* 33 on the total data
+* 23 per yer
+* 9 per month
+* 5 per week
 
 If you want me to keep track of your Memrise learning progress as well, just contact me!
 
