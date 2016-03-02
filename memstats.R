@@ -1,6 +1,20 @@
+################################################################################
+#
+# This is the main script
+#
+################################################################################
+
 source("setup.R")
 
-# # Overall stats
+# Indicate the name of the input CSV file here 
+latest_file <- "memrise_stats_20160301.csv"
+
+# Import file
+memstats <- get_data(latest_file)
+
+# Get stats
+#
+# Overall stats
 get_total(memstats)
 
 # Stats per year

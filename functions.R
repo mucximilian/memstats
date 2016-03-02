@@ -7,7 +7,10 @@
 
 # Read and format CSV File
 get_data <- function(file) {
-    memstats <- read.csv(file, header = FALSE, 
+    
+    filepath <- paste("input/csv", file, sep="/")
+    
+    memstats <- read.csv(filepath, header = FALSE, 
                          sep = ",", na.strings = "NULL")
     
     colnames(memstats) <- c(
@@ -147,15 +150,6 @@ get_abs <- function(stats, label, type) {
     return(stats_abs)
 }
 
-get_mean <- function(stats) {
-    
-    return(mean(stats[,c(2)]))
-}
-
-get_sum <- function(stats){
-    return(sum(stats[,c(2)]))
-}
-
 ################################################################################
 # Input data processing functions for period
 #
@@ -180,12 +174,12 @@ get_total <- function(stats) {
     abs_items <- get_abs(stats, path_daily, "items")
     
     # Day sums
-    sum_points <- get_sum(abs_points)
-    sum_items <- get_sum(abs_items)
+    sum_points <- sum(abs_points[,c(2)])
+    sum_items <- sum(abs_items[,c(2)])
     
     # Day means overall
-    mean_daily_points <- get_mean(abs_points)
-    mean_daily_items <- get_mean(abs_items)
+    mean_daily_points <- mean(abs_points[,c(2)])
+    mean_daily_items <- mean(abs_items[,c(2)])
     
     # Daily means per period
     get_per_period(abs_points, "week", mean, path_daily)
@@ -206,8 +200,8 @@ get_total <- function(stats) {
     sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_name)
     
     # Week means overall
-    mean_weekly_points <- get_mean(sum_weekly_points)
-    mean_weekly_items <- get_mean(sum_weekly_items)
+    mean_weekly_points <- mean(sum_weekly_points[,c(2)])
+    mean_weekly_items <- mean(sum_weekly_items[,c(2)])
     
     # Weekly means per period
     get_per_period(sum_weekly_points, "month", mean, path_weekly)
@@ -226,8 +220,8 @@ get_total <- function(stats) {
     sum_monthly_items <- get_per_period(abs_items, "month", sum, dir_name)
     
     # Month means overall
-    mean_monthly_points <- get_mean(sum_monthly_points)
-    mean_monthly_items <- get_mean(sum_monthly_items)
+    mean_monthly_points <- mean(sum_monthly_points[,c(2)])
+    mean_monthly_items <- mean(sum_monthly_items[,c(2)])
     
     # Monthly means per period sum
     get_per_period(sum_monthly_points, "quarter", mean, path_monthly)
@@ -244,8 +238,8 @@ get_total <- function(stats) {
     sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir_name)
     
     # Quarter means overall
-    mean_quarterly_points <- get_mean(sum_quarterly_points)
-    mean_quarterly_items <- get_mean(sum_quarterly_items)
+    mean_quarterly_points <- mean(sum_quarterly_points[,c(2)])
+    mean_quarterly_items <- mean(sum_quarterly_items[,c(2)])
     
     # Quarterly means per period 
     get_per_period(sum_quarterly_points, "year", mean, path_quarterly)
@@ -260,8 +254,8 @@ get_total <- function(stats) {
     sum_annual_items <- get_per_period(abs_items, "year", sum, dir_name)
     
     # Year means overall
-    mean_annual_points <- get_mean(sum_annual_points)
-    mean_annual_items <- get_mean(sum_annual_items)
+    mean_annual_points <- mean(sum_annual_points[,c(2)])
+    mean_annual_items <- mean(sum_annual_items[,c(2)])
     
     ############################################################################
     # Followers/-ing
@@ -311,12 +305,12 @@ get_year <- function(stats) {
     abs_items <- get_abs(stats, path_daily, "items")
     
     # Day sums
-    sum_points <- get_sum(abs_points)
-    sum_items <- get_sum(abs_items)
+    sum_points <- sum(abs_points[,c(2)])
+    sum_items <- sum(abs_items[,c(2)])
     
     # Day means overall
-    mean_daily_points <- get_mean(abs_points)
-    mean_daily_items <- get_mean(abs_items)
+    mean_daily_points <- mean(abs_points[,c(2)])
+    mean_daily_items <- mean(abs_items[,c(2)])
     
     # Daily means per period
     get_per_period(abs_points, "week", mean, path_daily)
@@ -335,8 +329,8 @@ get_year <- function(stats) {
     sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_name)
     
     # Week means overall
-    mean_weekly_points <- get_mean(sum_weekly_points)
-    mean_weekly_items <- get_mean(sum_weekly_items)
+    mean_weekly_points <- mean(sum_weekly_points[,c(2)])
+    mean_weekly_items <- mean(sum_weekly_items[,c(2)])
     
     # Weekly means per period
     get_per_period(sum_weekly_points, "month", mean, path_weekly)
@@ -354,8 +348,8 @@ get_year <- function(stats) {
     sum_monthly_items <- get_per_period(abs_items, "month", sum, dir_name)
     
     # Month means overall
-    mean_monthly_points <- get_mean(sum_monthly_points)
-    mean_monthly_items <- get_mean(sum_monthly_items)
+    mean_monthly_points <- mean(sum_monthly_points[,c(2)])
+    mean_monthly_items <- mean(sum_monthly_items[,c(2)])
     
     # Monthly means per period sum
     get_per_period(sum_monthly_points, "quarter", mean, path_monthly)
@@ -370,8 +364,8 @@ get_year <- function(stats) {
     sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir_name)
     
     # Quarter means overall
-    mean_quarterly_points <- get_mean(sum_quarterly_points)
-    mean_quarterly_items <- get_mean(sum_quarterly_items)
+    mean_quarterly_points <- mean(sum_quarterly_points[,c(2)])
+    mean_quarterly_items <- mean(sum_quarterly_items[,c(2)])
     
     ############################################################################
     # Followers/-ing
@@ -417,12 +411,12 @@ get_month <- function(stats) {
     abs_items <- get_abs(stats, path_daily, "items")
     
     # Day sums
-    sum_points <- get_sum(abs_points)
-    sum_items <- get_sum(abs_items)
+    sum_points <- sum(abs_points[,c(2)])
+    sum_items <- sum(abs_items[,c(2)])
     
     # Day means overall
-    mean_daily_points <- get_mean(abs_points)
-    mean_daily_items <- get_mean(abs_items)
+    mean_daily_points <- mean(abs_points[,c(2)])
+    mean_daily_items <- mean(abs_items[,c(2)])
     
     # Daily means per period
     get_per_period(abs_points, "week", mean, path_daily)
@@ -437,8 +431,8 @@ get_month <- function(stats) {
     sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_name)
     
     # Week means overall
-    mean_weekly_points <- get_mean(sum_weekly_points)
-    mean_weekly_items <- get_mean(sum_weekly_items)
+    mean_weekly_points <- mean(sum_weekly_points[,c(2)])
+    mean_weekly_items <- mean(sum_weekly_items[,c(2)])
     
     ############################################################################
     # Followers/-ing
@@ -480,12 +474,12 @@ get_week <- function(stats) {
     abs_items <- get_abs(stats, path_daily, "items")
     
     # Day sums
-    sum_points <- get_sum(abs_points)
-    sum_items <- get_sum(abs_items)
+    sum_points <- sum(abs_points[,c(2)])
+    sum_items <- sum(abs_items[,c(2)])
     
     # Day means overall
-    mean_daily_points <- get_mean(abs_points)
-    mean_daily_items <- get_mean(abs_items)
+    mean_daily_points <- mean(abs_points[,c(2)])
+    mean_daily_items <- mean(abs_items[,c(2)])
     
     ############################################################################
     # Followers/-ing
