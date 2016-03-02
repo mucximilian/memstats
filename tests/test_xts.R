@@ -13,6 +13,6 @@ str(mem_stats.xts)
 
 print(head(mem_stats.xts))
 
-mem_stats_monthly <- apply.quarterly(mem_stats.xts, mean, na.rm=TRUE)
+mem_stats_monthly <- apply.monthly(mem_stats.xts, mean, na.rm=TRUE)
 
 print(mem_stats_monthly)
