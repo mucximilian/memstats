@@ -10,6 +10,6 @@ source("functions_plot.R")
 # TO DO:
 # Create directory structure if not existing
 
-file <- "input/csv/memrise_stats_20160215.csv"
+file <- "input/csv/memrise_stats_20160301.csv"
 
 memstats <- get_data(file)
