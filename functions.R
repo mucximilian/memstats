@@ -74,8 +74,8 @@ apply_per_period <- function(stats, period, fun) {
 }
 
 get_cum <- function(stats, label) {
-    plot_daily_graph(stats[,c(1,2)], paste(label, "cum", sep="_")) # Points
-    plot_daily_graph(stats[,c(1,4)], paste(label, "cum", sep="_")) # Items
+    plot_daily_graph(stats[,c(1,2)], paste(label, "cum", sep="_"), FALSE) # Points
+    plot_daily_graph(stats[,c(1,4)], paste(label, "cum", sep="_"), FALSE) # Items
 }
 
 get_abs <- function(stats, label, type) {
@@ -233,9 +233,13 @@ get_total <- function(stats) {
 get_year <- function(stats) {
     
     dir <- "year"
-    
-    # TO DO:
+
     # Get year value and append to dir
+    year <- strftime(stats[1,c(1)],format="%Y/")
+    dir <- paste(dir, year, sep="/")
+    
+    out_dir <- paste("output/plots", dir, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
 
     ############################################################################
     path_daily = paste(dir, "daily", sep="")
@@ -300,9 +304,15 @@ get_year <- function(stats) {
     get_per_period(sum_monthly_items, "quarter", mean, path_monthly)
     
     ############################################################################
+    path_quarterly = paste(dir, "quarterly", sep="")
+    
     # Quarter sums
     sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir)
     sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir)
+    
+    # Quarter means overall
+    mean_quarterly_points <- get_mean(sum_quarterly_points)
+    mean_quarterly_items <- get_mean(sum_quarterly_items)
     
     ############################################################################
     # Single values output
@@ -334,8 +344,12 @@ get_month <- function(stats) {
     
     dir <- "month"
     
-    # TO DO:
     # Get month value and append to dir
+    month <- strftime(stats[1,c(1)],format="%Y-%m/")
+    dir <- paste(dir, month, sep="/")
+    
+    out_dir <- paste("output/plots", dir, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
 
     ############################################################################
     path_daily = paste(dir, "daily", sep="")
@@ -361,10 +375,16 @@ get_month <- function(stats) {
     get_per_period(abs_items, "week", mean, path_daily)
 
     ############################################################################
+    path_weekly = paste(dir, "weekly", sep="")
+    
     # Week sums
     sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
     sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
     
+    # Week means overall
+    mean_weekly_points <- get_mean(sum_weekly_points)
+    mean_weekly_items <- get_mean(sum_weekly_items)
+
     ############################################################################
     # Single values output
     #
@@ -389,10 +409,18 @@ get_month <- function(stats) {
 
 get_week <- function(stats) {
     
-    # TO DO:
+    dir <- "week"
+    
     # Get week value and append to dir
+    week <- strftime(stats[1,c(1)],format="%Y-%W/")
+    dir <- paste(dir, week, sep="/")
+    
+    out_dir <- paste("output/plots", dir, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
     
     ############################################################################
+    path_daily = paste(dir, "daily", sep="")
+    
     # Cumulative per day
     get_cum(stats, path_daily)
     
@@ -452,10 +480,13 @@ split_by_period <- function(stats, period) {
     # for processing
     stats.split <- get_period_splits(stats, period)
     
+    out_dir <- paste("output/plots", period, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
+
     switch(
         period,
-        year = lapply(stats, get_year),
-        month = lapply(stats, get_month),
-        week = lapply(stats, get_week)
+        year = lapply(stats.split, get_year),
+        month = lapply(stats.split, get_month),
+        week = lapply(stats.split, get_week)
     )
 }

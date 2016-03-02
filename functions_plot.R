@@ -2,6 +2,9 @@
 # 
 # This script contains all plotting related functions
 #
+# ggplot point shapes refrence: 
+# http://sape.inf.usi.ch/quick-reference/ggplot2/shape
+#
 ################################################################################
 # General functions
 
@@ -72,7 +75,7 @@ save_plot <- function(plot, name){
 # Plotting functions
 
 # Graph plot (for comulative and average data)
-plot_daily_graph <- function(stats, label) {
+plot_daily_graph <- function(stats, label, point=TRUE) {
 
     labels <- get_labels(stats, label)
 
@@ -82,6 +85,10 @@ plot_daily_graph <- function(stats, label) {
         scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
                      labels=date_format("%b %y")) +
         scale_y_continuous(labels = comma)
+    
+    if(point) {
+        stats_plot <- stats_plot + geom_point(shape=3, size=2, color="grey30")
+    }
         
     stats_plot <- add_plot_labels(stats_plot, labels)
     
