@@ -103,16 +103,16 @@ get_total <- function(stats) {
     ############################################################################
     dir_daily = paste(dir, "daily", sep="")
     
+    # Total sums of all days
+    sum_points <- get_sum(abs_points)
+    sum_items <- get_sum(abs_items)
+    
     # Cumulative per day
     get_cum(stats, dir_daily)
     
     # Absolute per day
     get_abs(abs_points, dir_daily)
     get_abs(abs_items, dir_daily)
-    
-    # Sums
-    sum_points <- get_sum(abs_points)
-    sum_items <- get_sum(abs_items)
     
     # Daily means
     get_per_period(abs_points, "week", mean, dir_daily)
@@ -186,19 +186,41 @@ get_total <- function(stats) {
     sum_annual_points <- get_per_period(abs_points, "year", sum, dir)
     sum_annual_items <- get_per_period(abs_items, "year", sum, dir)
     
-    # Year means
     mean_annual_points <- get_mean(sum_annual_points)
     mean_annual_items <- get_mean(sum_annual_items)
     
-    print(mean_annual_points)
-    print(mean_annual_items)
+    ############################################################################
+    # Single values output
+    #
+    # TO DOs:
+    # - Save to CSV
     
+    stats_total <- data.frame(
+        sum_points,
+        sum_items,
+        mean_weekly_points,
+        mean_weekly_items,
+        mean_monthly_points,
+        mean_monthly_items,
+        mean_quarterly_points,
+        mean_quarterly_items,
+        mean_annual_points,
+        mean_annual_items
+    )
+    
+    print(stats_total)
+    
+    ############################################################################
+    # Folwoers/-ing
     plot_followersing(stats[,c(1,6,7)], dir)
 }
 
 get_year <- function(stats) {
     
     dir <- "year"
+    
+    # TO DO:
+    # Get year value and append to dir
     
     abs_points <- stats[,c(1,3)]
     abs_items <- stats[,c(1,5)]
@@ -252,6 +274,9 @@ get_month <- function(stats) {
     
     dir <- "month"
     
+    # TO DO:
+    # Get month value and append to dir
+    
     abs_points <- stats[,c(1,3)]
     abs_items <- stats[,c(1,5)]
     
@@ -276,7 +301,8 @@ get_month <- function(stats) {
 
 get_week <- function(stats) {
     
-    dir <- "week"
+    # TO DO:
+    # Get week value and append to dir
     
     abs_points <- stats[,c(1,3)]
     abs_items <- stats[,c(1,5)]
@@ -293,37 +319,31 @@ get_week <- function(stats) {
 ################################################################################
 # Input data splitting functions for periods
 
-# Splitting function
 get_period_splits <- function(df, period, col=1) {
     # Splits a data frame into a list of data frames by a provided time period 
     # which cann be 'week', 'month' or 'year'.
     # Date column is the first column by default.
     
-    split_period <- switch(period,
-                           week = "%W",
-                           month = "%m",
-                           year = "%Y")
+    split_period <- switch(
+        period,
+        week = "%W",
+        month = "%m",
+        year = "%Y"
+    )
     
     tab <- split(df, format(df[, c(col)], split_period))
     return(tab)
 }
 
-# Period functions
-
-split_by_year <- function(stats) {
-    stats.split <- get_period_splits(stats, "year")
+split_by_period <- function(stats, period) {
+    # Splits a data frame by a given period and calls the corresponding function
+    # for processing
+    stats.split <- get_period_splits(stats, period)
     
-    get_year(stats)
-}
-
-split_by_month <- function(stats) {
-    stats.split <- get_period_splits(stats, "month")
-    
-    get_month(stats)
-}
-
-split_by_year <- function(stats) {
-    stats.split <- get_period_splits(stats, "week")
-    
-    get_week(stats)
+    switch(
+        period,
+        year = get_year(stats),
+        month = get_month(stats),
+        week = get_week(stats)
+    )
 }
