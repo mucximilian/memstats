@@ -17,7 +17,7 @@ A cron-job controlled PHP script obtains the raw learning data from the API and 
 * FOLLOWERS:    Number of followers
 * FOLLOWING:    Number of people I follow
 
-The statistic values of the cumulative/absolute sums and means are computed for the entire dataset and each period subset (year, month, week) when the script is executed. Various graphs visualize the data and summaries are stored in CSV files. There are the following amount of plotted values:
+The statistic values of the cumulative/absolute sums and means are computed for the entire dataset and each period subset (year, month, week) when the script is executed. Various graphs visualize the data and summaries are stored in CSV files. The total number of plotted values as follows:
 
 * 33 on the total data
 * 23 per yer
