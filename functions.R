@@ -1,48 +1,7 @@
-get_filename <- function(dir, a, b) {
-    return(paste(dir, paste(tolower(a), b, sep="_"), sep =""))
-}
-
-get_labels <- function(stats, label) {
-    x_label <- "Date"
-    y_label <- get_y_label(colnames(stats)[2])
-    title <- get_pretty_title(label, tolower(y_label))
-    filename <- paste(label, tolower(y_label), sep="_")
-    
-    return(c(x_label, y_label, title, filename))
-}
-
-get_y_label <- function(colname) {
-    
-    colname <- gsub("_", " ", tolower(colname))
-    y_label <- unlist(strsplit(colname, " "))[1] # Get first part of column name
-    y_label <- get_capitalized(y_label)
-
-    return(y_label)
-}
-
-get_pretty_title <- function(label, y_type) {
-
-    label_new <- get_capitalized(label)
-    
-    label_new <- gsub("_", " ", label_new)
-    label_new <- gsub("/", " ", label_new)
-    label_new <- gsub("cum", "cumulative", label_new)
-    label_new <- gsub("abs", "absolute", label_new)
-    
-    label_new <- paste(label_new, paste("(", y_type, ")", sep=""))
-    
-    return(label_new)
-}
-
-get_capitalized <- function(text) {
-    return(
-        paste(
-            toupper(substring(text, 1, 1)),
-            substring(text, 2,),
-            sep=""
-        )
-    )
-}
+################################################################################
+#
+################################################################################
+# Functions for data preparation
 
 create_xts_dataframe <- function(df) {
     # Creates a XTS dataframe from any data frame with date and a data column.
@@ -52,35 +11,23 @@ create_xts_dataframe <- function(df) {
     return(df)
 }
 
-################################################################################
-
-get_period_splits <- function(df, period, col=1) {
-    # Splits a data frame into a list of data frames by a provided time period 
-    # which cann be 'week', 'month' or 'year'.
-    # Date column is the first column by default.
-    
-    split_period <- switch(period,
-                           week = "%W",
-                           month = "%m",
-                           year = "%Y")
-    
-    tab <- split(df, format(df[, c(col)], split_period))
-    return(tab)
-}
-
 get_per_period <- function(stats, period, fun, dir){
     
+    # Store initial column names (required before return)
     colnames_in = colnames(stats)
     
+    # Create a XTS data frame for the periodically applied functions
     stats.xts <- create_xts_dataframe(stats)
 
-    stats_period <- switch(period,
-                    year = get_per_year(stats.xts, fun),
-                    quarter = get_per_quarter(stats.xts, fun),
-                    month = get_per_month(stats.xts, fun),
-                    week = get_per_week(stats.xts, fun)
+    stats_period <- switch(
+        period,
+        year = apply.yearly(stats.xts, fun, na.rm=TRUE),
+        quarter = apply.quarterly(stats.xts, fun, na.rm=TRUE),
+        month = apply.monthly(stats.xts, fun, na.rm=TRUE),
+        week = apply.weekly(stats.xts, fun, na.rm=TRUE)
     )
     
+    # Create an index on the date column
     stats_period.idx <- data.frame(
         DATE = index(stats_period),
         stats_period[, c(1)], 
@@ -88,36 +35,20 @@ get_per_period <- function(stats, period, fun, dir){
     )
     
     # Create label sum/mean_per_week/month/quarter/year
-    label <- switch(as.character(match.call()[4]),
-                    sum = paste(dir, "sum_per_", period, sep=""),
-                    mean = paste(dir, "mean_per", period, sep="_")
-                    )
+    label <- switch(
+        as.character(match.call()[4]),
+        sum = paste(dir, "sum_per_", period, sep=""),
+        mean = paste(dir, "mean_per", period, sep="_")
+    )
     
+    # Set column names from input
     colnames(stats_period.idx) <- colnames_in
     
+    # Plot the data
     plot_daily_graph(stats_period.idx, label)
     
     return(stats_period.idx)
 }
-
-get_per_year <- function(stats.xts, fun) {
-    return(apply.yearly(stats.xts, fun, na.rm=TRUE))
-}
-
-get_per_quarter <- function(stats.xts, fun) {
-    return(apply.quarterly(stats.xts, fun, na.rm=TRUE))
-}
-
-get_per_month <- function(stats.xts, fun) {
-    return(apply.monthly(stats.xts, fun, na.rm=TRUE))
-}
-
-get_per_week <- function(stats.xts, fun) {
-    return(apply.weekly(stats.xts, fun, na.rm=TRUE))
-}
-
-################################################################################
-# Data handling functions
 
 get_cum <- function(stats, label) {
     plot_daily_graph(stats[,c(1,2)], paste(label, "cum", sep="_")) # Points
@@ -137,7 +68,7 @@ get_sum <- function(stats){
 }
 
 ################################################################################
-# Data processing functions
+# Input data processing functions for period
 
 get_total <- function(stats) {
     
@@ -337,7 +268,24 @@ get_week <- function(stats) {
 }
 
 ################################################################################
-# Splitting functions
+# Input data splitting functions for periods
+
+# Splitting function
+get_period_splits <- function(df, period, col=1) {
+    # Splits a data frame into a list of data frames by a provided time period 
+    # which cann be 'week', 'month' or 'year'.
+    # Date column is the first column by default.
+    
+    split_period <- switch(period,
+                           week = "%W",
+                           month = "%m",
+                           year = "%Y")
+    
+    tab <- split(df, format(df[, c(col)], split_period))
+    return(tab)
+}
+
+# Period functions
 
 split_by_year <- function(stats) {
     stats.split <- get_period_splits(stats, "year")
