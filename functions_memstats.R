@@ -38,9 +38,6 @@ get_data <- function(file) {
 }
 
 ################################################################################
-
-col_date <- 2
-
 get_xts_dataframe <- function(col) {
     # Creates a XTS dataframe with a data and a date column. Requires a 'DATE'
     # column in the input data frame
@@ -53,7 +50,10 @@ get_xts_dataframe <- function(col) {
 # Data subsets
 
 get_period_subset <- function(memstats, period) {
-    period_bounds <- get_period_bounds(period)
+    
+    # TO DO: Need to implement this function
+    # period_bounds <- get_period_bounds(period)
+    
     memstats_sub <- subset(memstats, DATE >= as.Date("2015-10-15") & DATE <= as.Date("2015-10-20"))
     return(memstats_sub)
 }
@@ -61,11 +61,4 @@ get_period_subset <- function(memstats, period) {
 get_columns <- function(cols) {
     # Returns the requested columns and the date column
     return(memstats[, c(col_date, cols)])
-}
-
-################################################################################
-# Single stats
-
-get_total_day <- function(fun, col) {
-    print(fun(memstats[, c(col)], na.rm=TRUE))
 }
