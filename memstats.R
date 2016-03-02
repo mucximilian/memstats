@@ -1,11 +1,6 @@
-################################################################################
-#
-# This is the starting point for the Memrise data processing and plotting. All
-# actions are performed on the input file defined in the 'setup.R' script.
-#
-################################################################################
-
 source("setup.R")
+
+print(head(memstats))
 
 # Overall stats
 get_total(memstats)

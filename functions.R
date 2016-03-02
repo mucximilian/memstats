@@ -16,18 +16,48 @@ create_xts_dataframe <- function(df) {
 
 get_per_period <- function(stats, period, fun, dir){
     
+    stats_per_period <- apply_per_period(stats, paste(period, "s", sep=""), fun)
+    
+    # Create label sum/mean_per_week/month/quarter/year
+    label <- switch(
+        as.character(match.call()[4]),
+        sum = paste(dir, "sum_per_", period, sep=""),
+        mean = paste(dir, "mean_per", period, sep="_")
+    )
+    
+    # Plot the data
+    plot_daily_graph(stats_per_period, label)
+    
+    return(stats_per_period)
+}
+
+apply_per_period <- function(stats, period, fun) {
+    # Applies a function (sum, mean) on per provided period on a XTS data frame
+    #
+    # Source: http://www.noamross.net/blog/2013/2/6/xtsmarkdown.html
+    
     # Store initial column names (required before return)
     colnames_in = colnames(stats)
     
     # Create a XTS data frame for the periodically applied functions
     stats.xts <- create_xts_dataframe(stats)
+    
+    # If there are two records for a day (i.e. in case of any malfunction of the
+    # data retrieval) get only the day with the hightest value to avoid pitfalls
+    stats.xts <- apply.daily(stats.xts, pmax, na.rm=TRUE)
+    
+    # OLD
+    # stats_period <- switch(
+    #     period,
+    #     year = apply.yearly(stats.xts, fun, na.rm=TRUE),
+    #     quarter = apply.quarterly(stats.xts, fun, na.rm=TRUE),
+    #     month = apply.monthly(stats.xts, fun, na.rm=TRUE),
+    #     week = apply.weekly(stats.xts, fun, na.rm=TRUE)
+    # )
 
-    stats_period <- switch(
-        period,
-        year = apply.yearly(stats.xts, fun, na.rm=TRUE),
-        quarter = apply.quarterly(stats.xts, fun, na.rm=TRUE),
-        month = apply.monthly(stats.xts, fun, na.rm=TRUE),
-        week = apply.weekly(stats.xts, fun, na.rm=TRUE)
+    stats_period <- period.apply(
+        stats.xts, endpoints(stats.xts, on = period, 1), 
+        function(x) apply(x, 2, fun)
     )
     
     # Create an index on the date column
@@ -37,18 +67,8 @@ get_per_period <- function(stats, period, fun, dir){
         row.names = NULL
     )
     
-    # Create label sum/mean_per_week/month/quarter/year
-    label <- switch(
-        as.character(match.call()[4]),
-        sum = paste(dir, "sum_per_", period, sep=""),
-        mean = paste(dir, "mean_per", period, sep="_")
-    )
-    
     # Set column names from input
     colnames(stats_period.idx) <- colnames_in
-    
-    # Plot the data
-    plot_daily_graph(stats_period.idx, label)
     
     return(stats_period.idx)
 }
