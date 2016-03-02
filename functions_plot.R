@@ -128,5 +128,5 @@ plot_followersing <- function(followersing, dir) {
         scale_y_continuous(labels = comma) +
         labs(title = "Followers and following")
     
-    save_plot(mem_stats_plot, paste(dir, "followersing", sep = ""))
+    save_plot(mem_stats_plot, paste(dir, "followersing", sep = "/"))
 }

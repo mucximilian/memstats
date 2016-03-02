@@ -21,10 +21,10 @@ get_per_period <- function(stats, period, fun, dir){
     # Create label sum/mean_per_week/month/quarter/year
     label <- switch(
         as.character(match.call()[4]),
-        sum = paste(dir, "sum_per_", period, sep=""),
+        sum = paste(dir, "/", "sum_per_", period, sep=""),
         mean = paste(dir, "mean_per", period, sep="_")
     )
-    
+
     # Plot the data
     plot_daily_graph(stats_per_period, label)
 
@@ -106,13 +106,13 @@ get_sum <- function(stats){
 
 get_total <- function(stats) {
     
-    dir <- "total/"
+    dir_name <- "total"
     
-    out_dir <- paste("output/plots", dir, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
+    dir_out <- paste("output/plots", dir_name, sep="/")
+    dir.create(dir_out, showWarnings = FALSE)
     
     ############################################################################
-    path_daily = paste(dir, "daily", sep="")
+    path_daily = paste(dir_name, "daily", sep="/")
     
     # Cumulative per day
     get_cum(stats, path_daily)
@@ -141,11 +141,11 @@ get_total <- function(stats) {
     get_per_period(abs_items, "year", mean, path_daily)
     
     ############################################################################
-    path_weekly = paste(dir, "weekly", sep="")
+    path_weekly = paste(dir_name, "weekly", sep="/")
     
     # Week sums
-    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
-    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
+    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir_name)
+    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_name)
     
     # Week means overall
     mean_weekly_points <- get_mean(sum_weekly_points)
@@ -161,11 +161,11 @@ get_total <- function(stats) {
     get_per_period(sum_weekly_items, "year", mean, path_weekly)
     
     ############################################################################
-    path_monthly = paste(dir, "monthly", sep="")
+    path_monthly = paste(dir_name, "monthly", sep="/")
     
     # Month sums
-    sum_monthly_points <- get_per_period(abs_points, "month", sum, dir)
-    sum_monthly_items <- get_per_period(abs_items, "month", sum, dir)
+    sum_monthly_points <- get_per_period(abs_points, "month", sum, dir_name)
+    sum_monthly_items <- get_per_period(abs_items, "month", sum, dir_name)
     
     # Month means overall
     mean_monthly_points <- get_mean(sum_monthly_points)
@@ -179,11 +179,11 @@ get_total <- function(stats) {
     get_per_period(sum_monthly_items, "year", mean, path_monthly)
     
     ############################################################################
-    path_quarterly = paste(dir, "quarterly", sep="")
+    path_quarterly = paste(dir_name, "quarterly", sep="/")
     
     # Quarter sums
-    sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir)
-    sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir)
+    sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir_name)
+    sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir_name)
     
     # Quarter means overall
     mean_quarterly_points <- get_mean(sum_quarterly_points)
@@ -195,11 +195,11 @@ get_total <- function(stats) {
     get_per_period(sum_quarterly_items, "year", mean, path_quarterly)
     
     ############################################################################
-    path_annual = paste(dir, "annual", sep="")
+    path_annual = paste(dir_name, "annual", sep="/")
     
     # Year sums
-    sum_annual_points <- get_per_period(abs_points, "year", sum, dir)
-    sum_annual_items <- get_per_period(abs_items, "year", sum, dir)
+    sum_annual_points <- get_per_period(abs_points, "year", sum, dir_name)
+    sum_annual_items <- get_per_period(abs_items, "year", sum, dir_name)
     
     # Year means overall
     mean_annual_points <- get_mean(sum_annual_points)
@@ -207,7 +207,7 @@ get_total <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+    plot_followersing(stats[,c(1,6,7)], dir_name)
     
     ############################################################################
     # Single values output
@@ -230,23 +230,25 @@ get_total <- function(stats) {
         mean_annual_items
     )
 
-    save_as_csv(stats_total, dir)
+    save_as_csv(stats_total, dir_name)
 }
 
 get_year <- function(stats) {
     
-    dir <- "year"
+    dir_name <- "year"
 
     # Get year value and append to dir
-    year <- strftime(stats[1,c(1)],format="%Y/")
-    dir <- paste(dir, year, sep="/")
+    year <- strftime(stats[1,c(1)],format="%Y")
+    dir_name <- paste(dir_name, year, sep="/")
     
-    out_dir <- paste("output/plots", dir, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
+    dir_out <- paste("output/plots", dir_name, sep="/")
+    dir.create(dir_out, showWarnings = FALSE)
 
     ############################################################################
-    path_daily = paste(dir, "daily", sep="")
+    path_daily = paste(dir_name, "daily", sep="/")
     
+    print(path_daily)
+
     # Cumulative per day
     get_cum(stats, path_daily)
     
@@ -272,11 +274,11 @@ get_year <- function(stats) {
     get_per_period(abs_items, "quarter", mean, path_daily)
     
     ############################################################################
-    path_weekly = paste(dir, "weekly", sep="")
+    path_weekly = paste(dir_name, "weekly", sep="/")
     
     # Week sums
-    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
-    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
+    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir_name)
+    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_name)
     
     # Week means overall
     mean_weekly_points <- get_mean(sum_weekly_points)
@@ -291,11 +293,11 @@ get_year <- function(stats) {
     
     ############################################################################
     # Month sums
-    path_monthly = paste(dir, "monthly", sep="")
+    path_monthly = paste(dir_name, "monthly", sep="/")
     
     # Month sums
-    sum_monthly_points <- get_per_period(abs_points, "month", sum, dir)
-    sum_monthly_items <- get_per_period(abs_items, "month", sum, dir)
+    sum_monthly_points <- get_per_period(abs_points, "month", sum, dir_name)
+    sum_monthly_items <- get_per_period(abs_items, "month", sum, dir_name)
     
     # Month means overall
     mean_monthly_points <- get_mean(sum_monthly_points)
@@ -307,11 +309,11 @@ get_year <- function(stats) {
     get_per_period(sum_monthly_items, "quarter", mean, path_monthly)
     
     ############################################################################
-    path_quarterly = paste(dir, "quarterly", sep="")
+    path_quarterly = paste(dir_name, "quarterly", sep="/")
     
     # Quarter sums
-    sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir)
-    sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir)
+    sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir_name)
+    sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir_name)
     
     # Quarter means overall
     mean_quarterly_points <- get_mean(sum_quarterly_points)
@@ -319,7 +321,7 @@ get_year <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+    plot_followersing(stats[,c(1,6,7)], dir_name)
     
     ############################################################################
     # Single values output
@@ -340,22 +342,22 @@ get_year <- function(stats) {
         mean_quarterly_items
     )
     
-    save_as_csv(stats_total, dir)
+    save_as_csv(stats_total, dir_name)
 }
 
 get_month <- function(stats) {
     
-    dir <- "month"
+    dir_name <- "month"
     
     # Get month value and append to dir
-    month <- strftime(stats[1,c(1)],format="%Y-%m/")
-    dir <- paste(dir, month, sep="/")
+    month <- strftime(stats[1,c(1)],format="%Y-%m")
+    dir_name <- paste(dir_name, month, sep="/")
     
-    out_dir <- paste("output/plots", dir, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
+    dir_out <- paste("output/plots", dir_name, sep="/")
+    dir.create(dir_out, showWarnings = FALSE)
 
     ############################################################################
-    path_daily = paste(dir, "daily", sep="")
+    path_daily = paste(dir_name, "daily", sep="/")
     
     # Cumulative per day
     get_cum(stats, path_daily)
@@ -378,11 +380,11 @@ get_month <- function(stats) {
     get_per_period(abs_items, "week", mean, path_daily)
 
     ############################################################################
-    path_weekly = paste(dir, "weekly", sep="")
+    path_weekly = paste(dir_name, "weekly", sep="/")
     
     # Week sums
-    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
-    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
+    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir_name)
+    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_name)
     
     # Week means overall
     mean_weekly_points <- get_mean(sum_weekly_points)
@@ -390,7 +392,7 @@ get_month <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+    plot_followersing(stats[,c(1,6,7)], dir_name)
 
     ############################################################################
     # Single values output
@@ -407,22 +409,22 @@ get_month <- function(stats) {
         mean_weekly_items
     )
     
-    save_as_csv(stats_total, dir)
+    save_as_csv(stats_total, dir_name)
 }
 
 get_week <- function(stats) {
     
-    dir <- "week"
+    dir_name <- "week"
     
     # Get week value and append to dir
-    week <- strftime(stats[1,c(1)],format="%Y-%m-%W/")
-    dir <- paste(dir, week, sep="/")
+    week <- strftime(stats[1,c(1)],format="%Y-%m-%W")
+    dir_name <- paste(dir_name, week, sep="/")
     
-    out_dir <- paste("output/plots", dir, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
+    dir_out <- paste("output/plots", dir_name, sep="/")
+    dir.create(dir_out, showWarnings = FALSE)
     
     ############################################################################
-    path_daily = paste(dir, "daily", sep="")
+    path_daily = paste(dir_name, "daily", sep="/")
     
     # Cumulative per day
     get_cum(stats, path_daily)
@@ -441,7 +443,7 @@ get_week <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir)
+    plot_followersing(stats[,c(1,6,7)], dir_name)
     
     ############################################################################
     # Single values output
@@ -456,7 +458,7 @@ get_week <- function(stats) {
         mean_daily_items
     )
     
-    save_as_csv(stats_total, dir)
+    save_as_csv(stats_total, dir_name)
 }
 
 ################################################################################
@@ -483,11 +485,11 @@ split_by_period <- function(stats, period) {
     # for processing
     stats.split <- get_period_splits(stats, period)
     
-    out_dir_plots <- paste("output/plots", period, sep="/")
-    dir.create(out_dir_plots, showWarnings = FALSE)
+    dir_out_plots <- paste("output/plots", period, sep="/")
+    dir.create(dir_out_plots, showWarnings = FALSE)
     
-    out_dir_csv <- paste("output/csv", period, sep="/")
-    dir.create(out_dir_csv, showWarnings = FALSE)
+    dir_out_csv <- paste("output/csv", period, sep="/")
+    dir.create(dir_out_csv, showWarnings = FALSE)
 
     switch(
         period,
@@ -500,11 +502,17 @@ split_by_period <- function(stats, period) {
 ################################################################################
 
 save_as_csv <- function(stats, dir) {
-    # Saving a data frame in the specified directory as CSV file     
-    out_dir <- paste("output/csv", dir, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
     
-    filename <- paste(out_dir, "stats.csv", sep="")
+    # Saving a data frame in the specified directory as CSV file     
+    dir_out <- paste("output/csv", dir, sep="/")
+    
+    # Store stats in period/<period> directory
+    #
+    # dir.create(dir_out, showWarnings = FALSE)
+    # filename <- paste(dir_out, "stats.csv", sep="/")
+    
+    # Store stats in period directory
+    filename <- paste(dir_out, "stats.csv", sep="_")
     write.csv(stats, file = filename, row.names = FALSE)
     
     print(paste("Saving stats", filename, sep=" "))
