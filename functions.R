@@ -2,10 +2,46 @@ get_filename <- function(dir, a, b) {
     return(paste(dir, paste(tolower(a), b, sep="_"), sep =""))
 }
 
+get_labels <- function(stats, label) {
+    x_label <- "Date"
+    y_label <- get_y_label(colnames(stats)[2])
+    title <- get_pretty_title(label, tolower(y_label))
+    filename <- paste(label, tolower(y_label), sep="_")
+    
+    return(c(x_label, y_label, title, filename))
+}
+
 get_y_label <- function(colname) {
+    
     colname <- gsub("_", " ", tolower(colname))
-    y_label <- unlist(strsplit(colname, " "))[1]
+    y_label <- unlist(strsplit(colname, " "))[1] # Get first part of column name
+    y_label <- get_capitalized(y_label)
+
     return(y_label)
+}
+
+get_pretty_title <- function(label, y_type) {
+
+    label_new <- get_capitalized(label)
+    
+    label_new <- gsub("_", " ", label_new)
+    label_new <- gsub("/", " ", label_new)
+    label_new <- gsub("cum", "cumulative", label_new)
+    label_new <- gsub("abs", "absolute", label_new)
+    
+    label_new <- paste(label_new, paste("(", y_type, ")", sep=""))
+    
+    return(label_new)
+}
+
+get_capitalized <- function(text) {
+    return(
+        paste(
+            toupper(substring(text, 1, 1)),
+            substring(text, 2,),
+            sep=""
+        )
+    )
 }
 
 create_xts_dataframe <- function(df) {
@@ -53,10 +89,9 @@ get_per_period <- function(stats, period, fun, dir){
     
     # Create label sum/mean_per_week/month/quarter/year
     label <- switch(as.character(match.call()[4]),
-                    sum = paste(dir, "sum", sep="_"),
+                    sum = paste(dir, "sum_per_", period, sep=""),
                     mean = paste(dir, "mean_per", period, sep="_")
                     )
-    
     
     colnames(stats_period.idx) <- colnames_in
     
@@ -106,13 +141,13 @@ get_sum <- function(stats){
 
 get_total <- function(stats) {
     
-    dir <- "total"
+    dir <- "total/"
     
     abs_points <- stats[,c(1,3)]
     abs_items <- stats[,c(1,5)]
     
     ############################################################################
-    dir_daily = paste(dir, "daily", sep="/")
+    dir_daily = paste(dir, "daily", sep="")
     
     # Cumulative per day
     get_cum(stats, dir_daily)
@@ -140,11 +175,11 @@ get_total <- function(stats) {
     mean_daily_items <- get_mean(abs_items)
     
     ############################################################################
-    dir_weekly = paste(dir, "weekly", sep="/")
+    dir_weekly = paste(dir, "weekly", sep="")
     
     # Week sums
-    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir_weekly)
-    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_weekly)
+    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir)
+    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir)
     
     # Weekly means
     get_per_period(sum_weekly_points, "month", mean, dir_weekly)
@@ -159,11 +194,11 @@ get_total <- function(stats) {
     mean_weekly_items <- get_mean(sum_weekly_items)
     
     ############################################################################
-    dir_monthly = paste(dir, "monthly", sep="/")
+    dir_monthly = paste(dir, "monthly", sep="")
     
     # Month sums
-    sum_monthly_points <- get_per_period(abs_points, "month", sum, dir_monthly)
-    sum_monthly_items <- get_per_period(abs_items, "month", sum, dir_monthly)
+    sum_monthly_points <- get_per_period(abs_points, "month", sum, dir)
+    sum_monthly_items <- get_per_period(abs_items, "month", sum, dir)
     
     # Monthly means
     get_per_period(sum_monthly_points, "quarter", mean, dir_monthly)
@@ -176,11 +211,11 @@ get_total <- function(stats) {
     mean_monthly_items <- get_mean(sum_monthly_items)
     
     ############################################################################
-    dir_quarterly = paste(dir, "quarterly", sep="/")
+    dir_quarterly = paste(dir, "quarterly", sep="")
     
     # Quarter sums
-    sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir_quarterly)
-    sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir_quarterly)
+    sum_quarterly_points <- get_per_period(abs_points, "quarter", sum, dir)
+    sum_quarterly_items <- get_per_period(abs_items, "quarter", sum, dir)
     
     # Quarterly means
     get_per_period(sum_quarterly_points, "year", mean, dir_quarterly)
@@ -191,18 +226,18 @@ get_total <- function(stats) {
     mean_quarterly_items <- get_mean(sum_quarterly_items)
     
     ############################################################################
-    dir_yearly = paste(dir, "yearly", sep="/")
+    dir_annual = paste(dir, "annual", sep="")
     
     # Year sums
-    sum_yearly_points <- get_per_period(abs_points, "year", sum, dir_yearly)
-    sum_yearly_items <- get_per_period(abs_items, "year", sum, dir_yearly)
+    sum_annual_points <- get_per_period(abs_points, "year", sum, dir)
+    sum_annual_items <- get_per_period(abs_items, "year", sum, dir)
     
     # Year means
-    mean_yearly_points <- get_mean(sum_yearly_points)
-    mean_yearly_items <- get_mean(sum_yearly_items)
+    mean_annual_points <- get_mean(sum_annual_points)
+    mean_annual_items <- get_mean(sum_annual_items)
     
-    print(mean_yearly_points)
-    print(mean_yearly_items)
+    print(mean_annual_points)
+    print(mean_annual_items)
     
     plot_followersing(stats[,c(1,6,7)], dir)
 }
