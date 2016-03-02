@@ -72,7 +72,7 @@ save_plot <- function(plot, name){
 }
 
 ################################################################################
-# Plotting functions
+# Plotting function
 
 # Graph plot (for comulative and average data)
 plot_daily_graph <- function(stats, label, point=TRUE) {

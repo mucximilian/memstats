@@ -108,6 +108,9 @@ get_total <- function(stats) {
     
     dir <- "total/"
     
+    out_dir <- paste("output/plots", dir, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
+    
     ############################################################################
     path_daily = paste(dir, "daily", sep="")
     
@@ -412,7 +415,7 @@ get_week <- function(stats) {
     dir <- "week"
     
     # Get week value and append to dir
-    week <- strftime(stats[1,c(1)],format="%Y-%W/")
+    week <- strftime(stats[1,c(1)],format="%Y-%m-%W/")
     dir <- paste(dir, week, sep="/")
     
     out_dir <- paste("output/plots", dir, sep="/")
