@@ -33,7 +33,7 @@ If you want me to keep track of your Memrise learning progress as well, just con
 * More sophisticeted CSV output (combination of the CSV data that is created now)
 * Enable direct access to a MySQL database (would require no CSV file)
 * OR: No storing in a database at all but direct in a CSV file (less workaround)
-* Based on a direct CSV storage: Adding a simple D3.js version for a direct visualization in the browser
+* Based on a direct CSV storage: Adding a simple D3.js version for a direct visualization in the browser  
   Example: http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5
 
 ##Examples
