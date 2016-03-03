@@ -32,6 +32,8 @@ If you want me to keep track of your Memrise learning progress as well, just con
 * Making the plots more adaptive (axis-labels, breaks)
 * More sophisticeted CSV output (combination of the CSV data that is created now)
 * Enable direct access to a MySQL database (would require no CSV file)
+* OR: No storing in a database at all but direct CSV file creation (maybe better...)
+* Adding a simple D3.js version for direct output in the browser (example: http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5)
 
 ##Examples
 
