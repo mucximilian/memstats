@@ -163,9 +163,6 @@ get_total <- function(stats) {
     dir_out <- paste("output/plots", dir_name, sep="/")
     dir.create(dir_out, showWarnings = FALSE)
     
-    ############################################################################
-    path_daily = paste(dir_name, "daily", sep="/")
-    
     # Cumulative per day
     get_cum(stats, path_daily)
     
@@ -176,6 +173,9 @@ get_total <- function(stats) {
     # Day sums
     sum_points <- sum(abs_points[,c(2)])
     sum_items <- sum(abs_items[,c(2)])
+    
+    ############################################################################
+    path_daily = paste(dir_name, "daily", sep="/")
     
     # Day means overall
     mean_daily_points <- mean(abs_points[,c(2)])
@@ -294,8 +294,6 @@ get_year <- function(stats) {
 
     ############################################################################
     path_daily = paste(dir_name, "daily", sep="/")
-    
-    print(path_daily)
 
     # Cumulative per day
     get_cum(stats, path_daily)

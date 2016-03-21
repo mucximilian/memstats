@@ -72,7 +72,7 @@ save_plot <- function(plot, name){
 }
 
 ################################################################################
-# Plotting function
+# Plotting functions
 
 # Graph plot (for comulative and average data)
 plot_daily_graph <- function(stats, label, point=TRUE) {
@@ -97,8 +97,7 @@ plot_daily_graph <- function(stats, label, point=TRUE) {
 
 # Scatterplot with indicated mean
 plot_daily_scatterplot <- function(stats, label) {
-    # TO DO:
-    # Dispaly numeric mean value in plot
+    
     labels <- get_labels(stats, label)
 
     stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
@@ -129,5 +128,5 @@ plot_followersing <- function(followersing, dir) {
         scale_y_continuous(labels = comma) +
         labs(title = "Followers and following")
     
-    save_plot(mem_stats_plot, paste(dir, "followersing", sep = "/"))
+    save_plot(mem_stats_plot, paste(dir, "followersing", sep = ""))
 }
