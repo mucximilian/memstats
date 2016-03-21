@@ -4,11 +4,11 @@ source("functions.R")
 
 ################################################################################
 
-file <- "input/csv/memrise_stats_20160215.csv"
+file <- "memrise_stats_20160321.csv"
 
 mem_stats <- get_data(file)
 
-mem_stats.xts <- xts(mem_stats[, "POINTS_ABS"], order.by = mem_stats[, "DATE"])
+mem_stats.xts <- xts(mem_stats[, "POINTS"], order.by = mem_stats[, "DATE"])
 str(mem_stats.xts)
 
 print(head(mem_stats.xts))
