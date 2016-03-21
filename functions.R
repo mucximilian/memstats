@@ -8,7 +8,7 @@
 # Read and format CSV File
 get_data <- function(file) {
     
-    filepath <- paste("input/csv", file, sep="/")
+    filepath <- paste("input", file, sep="/")
     
     memstats <- read.csv(filepath, header = FALSE, 
                          sep = ",", na.strings = "NULL")
@@ -75,7 +75,7 @@ get_per_period <- function(stats, period, fun, dir){
     # Plot and return the output of a function applied to the input data on 
     # specified period
     
-    stats_per_period <- apply_per_period(stats, paste(period, "s", sep=""), fun)
+    stats_per_period <- apply_per_period(stats, period, fun)
     
     # Create label sum/mean_per_week/month/quarter/year
     label <- switch(
@@ -100,11 +100,11 @@ apply_per_period <- function(stats, period, fun) {
     
     # Create a XTS data frame for the periodically applied functions
     stats.xts <- create_xts_dataframe(stats)
-    
+
     # If there are two records for a day (i.e. in case of any malfunction of the
     # data retrieval) get only the day with the hightest value to avoid pitfalls
     stats.xts <- apply.daily(stats.xts, pmax, na.rm=TRUE)
-    
+
     # OLD
     # stats_period <- switch(
     #     period,
@@ -115,7 +115,7 @@ apply_per_period <- function(stats, period, fun) {
     # )
 
     stats_period <- period.apply(
-        stats.xts, endpoints(stats.xts, on = period, 1), 
+        stats.xts, endpoints(stats.xts, on = paste(period, "s", sep=""), 1), 
         function(x) apply(x, 2, fun)
     )
     
@@ -163,6 +163,9 @@ get_total <- function(stats) {
     dir_out <- paste("output/plots", dir_name, sep="/")
     dir.create(dir_out, showWarnings = FALSE)
     
+    ############################################################################
+    path_daily = paste(dir_name, "daily", sep="/")
+    
     # Cumulative per day
     get_cum(stats, path_daily)
     
@@ -173,9 +176,6 @@ get_total <- function(stats) {
     # Day sums
     sum_points <- sum(abs_points[,c(2)])
     sum_items <- sum(abs_items[,c(2)])
-    
-    ############################################################################
-    path_daily = paste(dir_name, "daily", sep="/")
     
     # Day means overall
     mean_daily_points <- mean(abs_points[,c(2)])
@@ -259,7 +259,8 @@ get_total <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir_name)
+    path_followersing = paste(dir_name, "followersing", sep="/")
+    plot_followersing(stats[,c(1,6,7)], path_followersing)
     
     ############################################################################
     # Single values output
@@ -367,7 +368,8 @@ get_year <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir_name)
+    path_followersing = paste(dir_name, "followersing", sep="/")
+    plot_followersing(stats[,c(1,6,7)], path_followersing)
     
     ############################################################################
     # Single values output
@@ -434,7 +436,8 @@ get_month <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir_name)
+    path_followersing = paste(dir_name, "followersing", sep="/")
+    plot_followersing(stats[,c(1,6,7)], path_followersing)
 
     ############################################################################
     # Single values output
@@ -481,7 +484,8 @@ get_week <- function(stats) {
     
     ############################################################################
     # Followers/-ing
-    plot_followersing(stats[,c(1,6,7)], dir_name)
+    path_followersing = paste(dir_name, "followersing", sep="/")
+    plot_followersing(stats[,c(1,6,7)], path_followersing)
     
     ############################################################################
     # Single values output
