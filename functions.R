@@ -577,16 +577,14 @@ get_period_splits <- function(df, period, col=1) {
 
 split_by_period <- function(stats, period) {
     # Splits a data frame by a given period and calls the corresponding function
-    # for processing
+    # for further processing
     stats.split <- get_period_splits(stats, period)
     
     # The output directory is hardcoded here
     out_dir <- "output"
     dir.create(out_dir, showWarnings = FALSE)
-    out_dir <- paste("output", period, sep="/")
+    out_dir <- paste(out_dir, period, sep="/")
     dir.create(out_dir, showWarnings = FALSE)
-    
-    print(out_dir)
 
     # Collect the results in a list of data frames
     results <- switch(
