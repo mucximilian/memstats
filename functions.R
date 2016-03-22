@@ -499,8 +499,65 @@ get_week <- function(stats) {
     save_as_csv(stats_total, dir_name)
 }
 
+evaluate_stats_week <- function(stats, out_dir) {
+    
+    # Get week value and append to dir if week evaluation is requested
+    first_day_of_week <- stats[1,c(1)]
+    week_str <- strftime(first_day_of_week, format="%Y-%m-%W")
+    out_path <- paste(out_dir, week_str, sep="/")
+    dir.create(out_path, showWarnings = FALSE)
+    
+    # Followers/-ing
+    path_followersing = paste(out_path, "followersing", sep="/")
+    plot_followersing(stats[,c(1,6,7)], path_followersing)
+    
+    # Print plots and get stats
+    result_stats <- get_stats(stats, out_path)
+    
+    # Adding week as date to stats table
+    result_stats <- cbind(first_day_of_week, result_stats)
+    
+    return(result_stats)
+}
+    
+get_stats <- function(stats, out_path) {
+    
+    path_daily = paste(out_path, "daily", sep="/")
+
+    # Cumulative per day
+    get_cum(stats, path_daily)
+    
+    # Absolute per day
+    abs_points <- get_abs(stats, path_daily, "points")
+    abs_items <- get_abs(stats, path_daily, "items")
+    
+    ############################################################################
+    
+    # Day sums
+    sum_points <- sum(abs_points[,c(2)])
+    sum_items <- sum(abs_items[,c(2)])
+    
+    # Day means overall
+    mean_daily_points <- mean(abs_points[,c(2)])
+    mean_daily_items <- mean(abs_items[,c(2)])
+    
+    ############################################################################
+    # Single values output
+    results <- stats_total <- data.frame(
+        sum_points,
+        sum_items,
+        mean_daily_points,
+        mean_daily_items
+    )
+    
+    return(stats_total)
+}
+
 ################################################################################
 # Input data splitting functions for periods
+
+# TO Do:
+# Add last week/month/year function
 
 get_period_splits <- function(df, period, col=1) {
     # Splits a data frame into a list of data frames by a provided time period 
@@ -523,34 +580,45 @@ split_by_period <- function(stats, period) {
     # for processing
     stats.split <- get_period_splits(stats, period)
     
-    dir_out_plots <- paste("output/plots", period, sep="/")
-    dir.create(dir_out_plots, showWarnings = FALSE)
+    # The output directory is hardcoded here
+    out_dir <- "output"
+    dir.create(out_dir, showWarnings = FALSE)
+    out_dir <- paste("output", period, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
     
-    dir_out_csv <- paste("output/csv", period, sep="/")
-    dir.create(dir_out_csv, showWarnings = FALSE)
+    print(out_dir)
 
-    switch(
+    # Collect the results in a list of data frames
+    results <- switch(
         period,
         year = lapply(stats.split, get_year),
         month = lapply(stats.split, get_month),
-        week = lapply(stats.split, get_week)
+        week = lapply(stats.split, evaluate_stats_week, out_dir=out_dir)
     )
+
+    # Combine multiple data frames from list in single data frame
+    results.df <- ldply(results, data.frame, .id = NULL)
+    results.df <- results.df[order(results.df[1], decreasing = TRUE),]
+    
+    results.df <- switch(
+        period,
+        week = data.frame(
+            strftime(results.df[,1], format="%Y-%m-%W"),
+            results.df[2:5]
+        )
+    )
+    
+    colnames(results.df)[1] <- period
+
+    save_as_csv(results.df, out_dir)
 }
 
 ################################################################################
 # Create CSV output
-save_as_csv <- function(stats, dir) {
-    
-    # Saving a data frame in the specified directory as CSV file     
-    dir_out <- paste("output/csv", dir, sep="/")
-    
-    # Store stats in period/<period> directory
-    #
-    # dir.create(dir_out, showWarnings = FALSE)
-    # filename <- paste(dir_out, "stats.csv", sep="/")
-    
+save_as_csv <- function(stats, out_dir) {
+
     # Store stats in period directory
-    filename <- paste(dir_out, "stats.csv", sep="_")
+    filename <- paste(out_dir, "stats.csv", sep="_")
     write.csv(stats, file = filename, row.names = FALSE)
     
     print(paste("Saving stats", filename, sep=" "))

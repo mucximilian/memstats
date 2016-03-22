@@ -65,7 +65,7 @@ add_plot_labels <- function(plot, labels) {
 
 save_plot <- function(plot, name){
     print(plot)
-    file <- paste("output/plots/", name, ".png", sep = "")
+    file <- paste(name, ".png", sep = "")
     print(paste("Saving plot", file, sep=" "))
     ggsave(file, plot=plot, dpi=96)
     dev.off()
