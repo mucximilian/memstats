@@ -412,14 +412,11 @@ get_period_splits <- function(df, period, col=1) {
     return(df.split)
 }
 
-split_by_period <- function(stats, period) {
+split_by_period <- function(stats, period, out_dir) {
     # Splits a data frame by a given period and calls the corresponding function
     # for further processing
     stats.split <- get_period_splits(stats, period)
 
-    # The output directory is hardcoded here
-    out_dir <- "output"
-    dir.create(out_dir, showWarnings = FALSE)
     out_dir <- paste(out_dir, period, sep="/")
     dir.create(out_dir, showWarnings = FALSE)
 
@@ -462,3 +459,8 @@ save_as_csv <- function(stats, out_dir) {
     
     print(paste("Saving stats", filename, sep=" "))
 }
+
+get_time_string <- function() {
+    time <- strftime(Sys.time(), format="%Y%m%d-%H%M")
+    return(time)
+} 

@@ -5,10 +5,24 @@
 ################################################################################
 
 evaluate_stats <- function(stats, period=NULL, out_dir=NULL) {
-    if(is.null(period)) {
-        get_total(stats)
+    
+    # Create output directory
+    if(!is.null(out_dir)) {
+        if(grepl("_$", out_dir)) {
+            out_dir <- paste(out_dir, get_time_string(), sep="")
+            out_dir <- paste("output", out_dir, sep="/")
+        } else {
+            out_dir <- paste("output", out_dir, sep="/")
+        }
     } else {
-        split_by_period(stats, period)
+        out_dir <- paste("output", get_time_string(), sep="/")
+    }
+    dir.create(out_dir, showWarnings = FALSE)
+    
+    if(is.null(period)) {
+        get_total(stats, out_dir)
+    } else {
+        split_by_period(stats, period, out_dir)
     }
 }
 

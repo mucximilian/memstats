@@ -25,5 +25,5 @@ memstats <- get_data(latest_file)
 # evaluate_stats(memstats, "month")
 
 # # # Stats per week
-evaluate_stats(memstats, "week")
+evaluate_stats(memstats, "week", "mucx_")
 
