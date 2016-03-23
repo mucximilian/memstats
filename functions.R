@@ -402,12 +402,13 @@ get_period_splits <- function(df, period, col=1) {
     
     split_period <- switch(
         period,
-        week = "%W",
-        month = "%m",
+        week = "%Y%m%W",
+        month = "%Y%m",
         year = "%Y"
     )
     
     df.split <- split(df, format(df[, c(col)], split_period))
+
     return(df.split)
 }
 
