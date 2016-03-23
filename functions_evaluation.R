@@ -4,6 +4,14 @@
 #
 ################################################################################
 
+evaluate_stats <- function(stats, period=NULL, out_dir=NULL) {
+    if(is.null(period)) {
+        get_total(stats)
+    } else {
+        split_by_period(stats, period)
+    }
+}
+
 evaluate_period <- function(stats, out_dir, period) {
     
     # Get period name and append to dir
@@ -173,9 +181,7 @@ get_stats_daily <- function(stats, period=NULL, out_path=NULL) {
     # Day means overall
     mean_daily_points <- mean(stats[,c(2)])
     mean_daily_items <- mean(stats[,c(3)])
-    
-    print(period)
-    
+
     # Create plots
     if(!is.null(period)) {
         if (period == "month") {

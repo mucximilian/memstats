@@ -12,17 +12,18 @@ latest_file <- "memrise_stats_20160322.csv"
 # Import file
 memstats <- get_data(latest_file)
 
+############################################
 # Get stats
-#s
+
 # Overall stats
-# get_total(memstats)
+# evaluate_stats(memstats)
 
 # Stats per year
-# split_by_period(memstats, "year")
+# evaluate_stats(memstats, "year")
 
 # # # Stats per month
-# split_by_period(memstats, "month")
+# evaluate_stats(memstats, "month")
 
 # # # Stats per week
-split_by_period(memstats, "week")
+evaluate_stats(memstats, "week")
 
