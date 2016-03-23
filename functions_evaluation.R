@@ -6,7 +6,10 @@
 
 evaluate_stats <- function(stats, period=NULL, out_dir=NULL) {
     
-    # Create output directory
+    # Create output directory with the options
+    # - added if provided
+    # - date and time if not provided
+    # - if provided and end with _ add date and time
     if(!is.null(out_dir)) {
         if(grepl("_$", out_dir)) {
             out_dir <- paste(out_dir, get_time_string(), sep="")
