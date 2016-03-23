@@ -402,7 +402,7 @@ get_period_splits <- function(df, period, col=1) {
     
     split_period <- switch(
         period,
-        week = "%Y%m%W",
+        week = "%Y%W",
         month = "%Y%m",
         year = "%Y"
     )
@@ -416,7 +416,7 @@ split_by_period <- function(stats, period) {
     # Splits a data frame by a given period and calls the corresponding function
     # for further processing
     stats.split <- get_period_splits(stats, period)
-    
+
     # The output directory is hardcoded here
     out_dir <- "output"
     dir.create(out_dir, showWarnings = FALSE)
@@ -443,7 +443,7 @@ split_by_period <- function(stats, period) {
         ),
         month = data.frame(
             strftime(results.df[,1], format="%Y-%m"),
-            results.df[2:5]
+            results.df[2:7]
         )
     )
     
