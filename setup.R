@@ -5,4 +5,5 @@ library(xts)
 library(plyr)
 
 source("functions.R")
+source("functions_evaluation.R")
 source("functions_plot.R")

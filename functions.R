@@ -389,170 +389,6 @@ get_year <- function(stats) {
     save_as_csv(stats_total, dir_name)
 }
 
-get_month <- function(stats) {
-    
-    dir_name <- "month"
-    
-    # Get month value and append to dir
-    month <- strftime(stats[1,c(1)],format="%Y-%m")
-    dir_name <- paste(dir_name, month, sep="/")
-    
-    dir_out <- paste("output/plots", dir_name, sep="/")
-    dir.create(dir_out, showWarnings = FALSE)
-
-    ############################################################################
-    path_daily = paste(dir_name, "daily", sep="/")
-    
-    # Cumulative per day
-    get_cum(stats, path_daily)
-    
-    # Absolute per day
-    abs_points <- get_abs(stats, path_daily, "points")
-    abs_items <- get_abs(stats, path_daily, "items")
-    
-    # Day sums
-    sum_points <- sum(abs_points[,c(2)])
-    sum_items <- sum(abs_items[,c(2)])
-    
-    # Day means overall
-    mean_daily_points <- mean(abs_points[,c(2)])
-    mean_daily_items <- mean(abs_items[,c(2)])
-    
-    # Daily means per period
-    get_per_period(abs_points, "week", mean, path_daily)
-
-    get_per_period(abs_items, "week", mean, path_daily)
-
-    ############################################################################
-    path_weekly = paste(dir_name, "weekly", sep="/")
-    
-    # Week sums
-    sum_weekly_points <- get_per_period(abs_points, "week", sum, dir_name)
-    sum_weekly_items <- get_per_period(abs_items, "week", sum, dir_name)
-    
-    # Week means overall
-    mean_weekly_points <- mean(sum_weekly_points[,c(2)])
-    mean_weekly_items <- mean(sum_weekly_items[,c(2)])
-    
-    ############################################################################
-    # Followers/-ing
-    path_followersing = paste(dir_name, "followersing", sep="/")
-    plot_followersing(stats[,c(1,6,7)], path_followersing)
-
-    ############################################################################
-    # Single values output
-    stats_total <- data.frame(
-        sum_points,
-        sum_items,
-        mean_daily_points,
-        mean_daily_items,
-        mean_weekly_points,
-        mean_weekly_items
-    )
-    
-    save_as_csv(stats_total, dir_name)
-}
-
-get_week <- function(stats) {
-    
-    dir_name <- "week"
-    
-    # Get week value and append to dir
-    week <- strftime(stats[1,c(1)],format="%Y-%m-%W")
-    dir_name <- paste(dir_name, week, sep="/")
-    
-    dir_out <- paste("output/plots", dir_name, sep="/")
-    dir.create(dir_out, showWarnings = FALSE)
-    
-    ############################################################################
-    path_daily = paste(dir_name, "daily", sep="/")
-    
-    # Cumulative per day
-    get_cum(stats, path_daily)
-    
-    # Absolute per day
-    abs_points <- get_abs(stats, path_daily, "points")
-    abs_items <- get_abs(stats, path_daily, "items")
-    
-    # Day sums
-    sum_points <- sum(abs_points[,c(2)])
-    sum_items <- sum(abs_items[,c(2)])
-    
-    # Day means overall
-    mean_daily_points <- mean(abs_points[,c(2)])
-    mean_daily_items <- mean(abs_items[,c(2)])
-    
-    ############################################################################
-    # Followers/-ing
-    path_followersing = paste(dir_name, "followersing", sep="/")
-    plot_followersing(stats[,c(1,6,7)], path_followersing)
-    
-    ############################################################################
-    # Single values output
-    stats_total <- data.frame(
-        sum_points,
-        sum_items,
-        mean_daily_points,
-        mean_daily_items
-    )
-    
-    save_as_csv(stats_total, dir_name)
-}
-
-evaluate_stats_week <- function(stats, out_dir) {
-    
-    # Get week value and append to dir if week evaluation is requested
-    first_day_of_week <- stats[1,c(1)]
-    week_str <- strftime(first_day_of_week, format="%Y-%m-%W")
-    out_path <- paste(out_dir, week_str, sep="/")
-    dir.create(out_path, showWarnings = FALSE)
-    
-    # Followers/-ing
-    path_followersing = paste(out_path, "followersing", sep="/")
-    plot_followersing(stats[,c(1,6,7)], path_followersing)
-    
-    # Print plots and get stats
-    result_stats <- get_stats(stats, out_path)
-    
-    # Adding week as date to stats table
-    result_stats <- cbind(first_day_of_week, result_stats)
-    
-    return(result_stats)
-}
-    
-get_stats <- function(stats, out_path) {
-    
-    path_daily = paste(out_path, "daily", sep="/")
-
-    # Cumulative per day
-    get_cum(stats, path_daily)
-    
-    # Absolute per day
-    abs_points <- get_abs(stats, path_daily, "points")
-    abs_items <- get_abs(stats, path_daily, "items")
-    
-    ############################################################################
-    
-    # Day sums
-    sum_points <- sum(abs_points[,c(2)])
-    sum_items <- sum(abs_items[,c(2)])
-    
-    # Day means overall
-    mean_daily_points <- mean(abs_points[,c(2)])
-    mean_daily_items <- mean(abs_items[,c(2)])
-    
-    ############################################################################
-    # Single values output
-    results <- stats_total <- data.frame(
-        sum_points,
-        sum_items,
-        mean_daily_points,
-        mean_daily_items
-    )
-    
-    return(stats_total)
-}
-
 ################################################################################
 # Input data splitting functions for periods
 
@@ -571,8 +407,8 @@ get_period_splits <- function(df, period, col=1) {
         year = "%Y"
     )
     
-    tab <- split(df, format(df[, c(col)], split_period))
-    return(tab)
+    df.split <- split(df, format(df[, c(col)], split_period))
+    return(df.split)
 }
 
 split_by_period <- function(stats, period) {
@@ -590,8 +426,8 @@ split_by_period <- function(stats, period) {
     results <- switch(
         period,
         year = lapply(stats.split, get_year),
-        month = lapply(stats.split, get_month),
-        week = lapply(stats.split, evaluate_stats_week, out_dir=out_dir)
+        month = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period),
+        week = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period)
     )
 
     # Combine multiple data frames from list in single data frame
@@ -602,6 +438,10 @@ split_by_period <- function(stats, period) {
         period,
         week = data.frame(
             strftime(results.df[,1], format="%Y-%m-%W"),
+            results.df[2:5]
+        ),
+        month = data.frame(
+            strftime(results.df[,1], format="%Y-%m"),
             results.df[2:5]
         )
     )
