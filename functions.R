@@ -181,44 +181,6 @@ get_period_splits <- function(df, period, col=1) {
     return(df.split)
 }
 
-split_by_period <- function(stats, period, out_dir) {
-    # Splits a data frame by a given period and calls the corresponding function
-    # for further processing
-    
-    stats.split <- get_period_splits(stats, period)
-
-    # Collect the results in a list of data frames
-    results <- switch(
-        period,
-        year = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period),
-        month = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period),
-        week = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period)
-    )
-
-    # Combine multiple data frames from list in single data frame
-    results.df <- ldply(results, data.frame, .id = NULL)
-    results.df <- results.df[order(results.df[1], decreasing = TRUE),]
-    
-    results.df <- switch(
-        period,
-        week = data.frame(
-            strftime(results.df[,1], format="%Y-%m-%W"),
-            results.df[2:5]
-        ),
-        month = data.frame(
-            strftime(results.df[,1], format="%Y-%m"),
-            results.df[2:7]
-        ),
-        year = data.frame(
-            strftime(results.df[,1], format="%Y"),
-            results.df[2:11]
-        )
-    )
-    colnames(results.df)[1] <- period
-    
-    return(results.df)
-}
-
 ################################################################################
 # Create CSV output
 save_as_csv <- function(stats, out_dir, period) {

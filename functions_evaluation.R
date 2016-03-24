@@ -5,9 +5,9 @@
 ################################################################################
 
 evaluate_stats <- function(stats, period, out_dir=NULL) {
+    # Performs an evaluation on the chosen period
     
     out_dir <- get_out_dir(out_dir)
-    
     out_dir <- paste(out_dir, period, sep="/")
     dir.create(out_dir, showWarnings = FALSE)
 
@@ -20,9 +20,28 @@ evaluate_stats <- function(stats, period, out_dir=NULL) {
         results <- evaluate_period(stats, out_dir, "total")
     } else {
         # Split first, then evaluate
-        results <- split_by_period(stats, period, out_dir)
+        results <- evaluate_period_splits(stats, period, out_dir)
     }
     save_as_csv(results, out_dir, period)
+}
+
+evaluate_stats_latest <- function(stats, period, type, out_dir=NULL) {
+    # Performs an evaluation of the current or last week or month 
+    
+    out_dir <- get_out_dir(type)
+    out_dir <- paste(out_dir, period, sep="/")
+    dir.create(out_dir, showWarnings = FALSE)
+    
+    # Split first, then evaluate
+    stats.split <- get_period_splits(stats, period)
+    latest <- switch(
+        type,
+        current = last(stats.split)[[1]], # Current period
+        last = stats.split[length(stats.split)-1][[1]] # Last complete period
+    )
+    result <- evaluate_period(latest, out_dir, period)
+    
+    save_as_csv(result, out_dir, period)
 }
 
 evaluate_stats_full <- function(stats, out_dir=NULL) {
@@ -36,7 +55,7 @@ evaluate_stats_full <- function(stats, out_dir=NULL) {
 }
 
 evaluate_period <- function(stats, out_dir, period) {
-    
+
     if(!period=="total") {
     
         # Get period name and append to dir
@@ -72,6 +91,44 @@ evaluate_period <- function(stats, out_dir, period) {
     }
 
     return(result_stats)
+}
+
+evaluate_period_splits <- function(stats, period, out_dir) {
+    # Splits a data frame by a given period and calls the corresponding function
+    # for further processing
+    
+    stats.split <- get_period_splits(stats, period)
+    
+    # Collect the results in a list of data frames
+    results <- switch(
+        period,
+        year = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period),
+        month = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period),
+        week = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period)
+    )
+    
+    # Combine multiple data frames from list in single data frame
+    results.df <- ldply(results, data.frame, .id = NULL)
+    results.df <- results.df[order(results.df[1], decreasing = TRUE),]
+    
+    results.df <- switch(
+        period,
+        week = data.frame(
+            strftime(results.df[,1], format="%Y-%m-%W"),
+            results.df[2:5]
+        ),
+        month = data.frame(
+            strftime(results.df[,1], format="%Y-%m"),
+            results.df[2:7]
+        ),
+        year = data.frame(
+            strftime(results.df[,1], format="%Y"),
+            results.df[2:11]
+        )
+    )
+    colnames(results.df)[1] <- period
+    
+    return(results.df)
 }
 
 get_followersing <- function(stats, out_path) {

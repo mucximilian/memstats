@@ -18,6 +18,8 @@ memstats <- get_data(file)
 # All stats (overall, year, month, week)
 # evaluate_stats_full(memstats, "stats_")
 
+evaluate_stats_latest(memstats, "month", "current")
+
 # Overall stats
 # evaluate_stats(memstats, "total", "test_total")
 
@@ -28,5 +30,5 @@ memstats <- get_data(file)
 # evaluate_stats(memstats, "month", "test_month")
 
 # # # Stats per week
-evaluate_stats(memstats, "week", "test_week")
+# evaluate_stats(memstats, "week", "test_week")
 
