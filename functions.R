@@ -29,6 +29,12 @@ get_data <- function(file) {
     memstats <- memstats[order(memstats$ID), ]
     memstats$DATE <- as.Date(memstats$DATE , "%Y-%m-%d %H:%M:%S")
     
+    # Replacing NAs with value from previous row
+    memstats$POINTS_TOTAL <- na.locf(memstats$POINTS_TOTAL)
+    memstats$ITEMS_TOTAL <- na.locf(memstats$ITEMS_TOTAL)
+    memstats$FOLLOWERS <- na.locf(memstats$FOLLOWERS)
+    memstats$FOLLOWING <- na.locf(memstats$FOLLOWING)
+    
     # Computing absolute point and item diffs
     memstats$POINTS <- c(NA, memstats[2:nrow(memstats), 3] - memstats[1:(nrow(memstats)-1), 3])
     memstats$ITEMS <- c(NA, memstats[2:nrow(memstats), 7] - memstats[1:(nrow(memstats)-1), 7])

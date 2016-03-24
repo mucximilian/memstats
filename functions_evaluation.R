@@ -14,8 +14,9 @@ evaluate_stats <- function(stats, period, out_dir=NULL) {
     # Evaluate overall stats or split the input data by period
     results <- NULL
     if(period =="total") {
-        # Evaluate total data
-        stats <- stats[complete.cases(stats),] # TO DO Remove not replace
+        # TO DO: Check if this can be removed due to NA check in 'get_data'
+        stats <- stats[complete.cases(stats),]
+        
         results <- evaluate_period(stats, out_dir, "total")
     } else {
         # Split first, then evaluate
@@ -311,7 +312,6 @@ get_stats_quarterly <- function(stats, out_path, period=NULL) {
     )
     
     return(stats_total)
-    
 }
 
 get_stats_yearly <- function(stats, out_path) {
