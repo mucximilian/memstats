@@ -10,18 +10,21 @@ evaluate_stats <- function(stats, period=NULL, out_dir=NULL) {
     # - added if provided
     # - date and time if not provided
     # - if provided and end with _ add date and time
+    dir_output = "output"
+    dir.create(dir_output, showWarnings = FALSE)
     if(!is.null(out_dir)) {
         if(grepl("_$", out_dir)) {
             out_dir <- paste(out_dir, get_time_string(), sep="")
-            out_dir <- paste("output", out_dir, sep="/")
+            out_dir <- paste(dir_output, out_dir, sep="/")
         } else {
-            out_dir <- paste("output", out_dir, sep="/")
+            out_dir <- paste(dir_output, out_dir, sep="/")
         }
     } else {
         out_dir <- paste("output", get_time_string(), sep="/")
     }
     dir.create(out_dir, showWarnings = FALSE)
-    
+
+    # Evaluate overall stats or split the input data by period
     if(is.null(period)) {
         get_total(stats, out_dir)
     } else {
@@ -48,7 +51,7 @@ evaluate_period <- function(stats, out_dir, period) {
     
     # Print plots and get stats
     stats_abs <- get_stats(stats, out_path)
-    
+
     result_stats <- switch(
         period,
         week = get_week(stats_abs, out_path),
@@ -62,44 +65,20 @@ evaluate_period <- function(stats, out_dir, period) {
 }
 
 get_week <- function(stats, out_path) {
-    stats <- get_stats_daily(stats)
+    stats <- get_stats_daily(stats, out_path)
     return(stats)
 }
 
 get_month <- function(stats, out_path) {
     
-    stats <- get_stats_daily(stats, "month")
+    stats_daily <- get_stats_daily(stats, "month", out_path)
     
-    
-    
-    
-    
-    
-    
-    result_stats <- get_stats_week(stats, out_path)
-    
-    
-    
-    #################################
-    # Daily means per period
-    
+    stats_weekly <- get_stats_weekly(stats, "month", out_path)
 
-    
-    #################################
-    # Week sums
-    sum_weekly_points <- get_per_period(stats[c(1,2)], "week", sum, out_path)
-    sum_weekly_items <- get_per_period(stats[c(1,3)], "week", sum, out_path)
-    
-    # Week means overall
-    mean_weekly_points <- mean(sum_weekly_points[,c(2)])
-    mean_weekly_items <- mean(sum_weekly_items[,c(2)])
-    
-    #################################
     # Single values output
     stats_total <- data.frame(
-        result_stats,
-        mean_weekly_points,
-        mean_weekly_items
+        stats_daily,
+        stats_weekly
     )
     
     return(stats_total)
@@ -162,7 +141,6 @@ get_year <- function(stats, out_path) {
     mean_quarterly_points <- mean(sum_quarterly_points[,c(2)])
     mean_quarterly_items <- mean(sum_quarterly_items[,c(2)])
     
-    #################################
     # Single values output
     stats_total <- data.frame(
         result_stats,
@@ -194,7 +172,6 @@ get_stats_daily <- function(stats, period=NULL, out_path=NULL) {
     sum_points <- sum(stats[,c(2)])
     sum_items <- sum(stats[,c(3)])
     
-    #################################
     # Day means overall
     mean_daily_points <- mean(stats[,c(2)])
     mean_daily_items <- mean(stats[,c(3)])
@@ -209,7 +186,6 @@ get_stats_daily <- function(stats, period=NULL, out_path=NULL) {
         }
     }
     
-    #################################
     # Single values output
     stats_total <- data.frame(
         sum_points,
@@ -221,8 +197,23 @@ get_stats_daily <- function(stats, period=NULL, out_path=NULL) {
     return(stats_total)
 }
 
-get_stats_weekly <- function(stats, period) {
+get_stats_weekly <- function(stats, period, out_path=NULL) {
+
+    # Week sums
+    sum_weekly_points <- get_per_period(stats[c(1,2)], "week", sum, out_path)
+    sum_weekly_items <- get_per_period(stats[c(1,3)], "week", sum, out_path)
     
+    # Week means overall
+    mean_weekly_points <- mean(sum_weekly_points[,c(2)])
+    mean_weekly_items <- mean(sum_weekly_items[,c(2)])
+    
+    # Single values output
+    stats_total <- data.frame(
+        mean_weekly_points,
+        mean_weekly_items
+    )
+    
+    return(stats_total)
 }
 
 get_stats_monthly <- function(stats, period) {

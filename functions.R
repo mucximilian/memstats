@@ -415,6 +415,7 @@ get_period_splits <- function(df, period, col=1) {
 split_by_period <- function(stats, period, out_dir) {
     # Splits a data frame by a given period and calls the corresponding function
     # for further processing
+    
     stats.split <- get_period_splits(stats, period)
 
     out_dir <- paste(out_dir, period, sep="/")
