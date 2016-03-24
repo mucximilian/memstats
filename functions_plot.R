@@ -71,28 +71,40 @@ save_plot <- function(plot, name){
     dev.off()
 }
 
+has_sufficient_rows <- function(stats) {
+    if(nrow(stats) > 1) {
+        return(TRUE)
+    } else {
+        message("Dataset has only one observation, skipping plot")
+        return(FALSE)
+    }
+}
+
 ################################################################################
 # Plotting functions
 
 # Graph plot (for comulative and average data)
-plot_daily_graph <- function(stats, label, point=TRUE) {
-
-    labels <- get_labels(stats, label)
-
-    # Plot the graph
-    stats_plot <- ggplot(stats, aes(x=stats[, c(1)], y=stats[, c(2)])) +
-        geom_line(colour = "red", size = 0.5) +
-        scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
-                     labels=date_format("%b %y")) +
-        scale_y_continuous(labels = comma)
+plot_graph <- function(stats, label, point=TRUE) {
     
-    if(point) {
-        stats_plot <- stats_plot + geom_point(shape=3, size=2, color="grey30")
-    }
+    # Only plot more than one observation
+    if(has_sufficient_rows(stats)) {
+        labels <- get_labels(stats, label)
+    
+        # Plot the graph
+        stats_plot <- ggplot(stats, aes(x=stats[, c(1)], y=stats[, c(2)])) +
+            geom_line(colour = "red", size = 0.5) +
+            scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
+                         labels=date_format("%b %y")) +
+            scale_y_continuous(labels = comma)
         
-    stats_plot <- add_plot_labels(stats_plot, labels)
-    
-    save_plot(stats_plot, labels[4])
+        if(point) {
+            stats_plot <- stats_plot + geom_point(shape=3, size=2, color="grey30")
+        }
+            
+        stats_plot <- add_plot_labels(stats_plot, labels)
+        
+        save_plot(stats_plot, labels[4])
+   }
 }
 
 # Scatterplot with indicated mean
@@ -120,10 +132,17 @@ plot_followersing <- function(followersing, dir) {
     mem_stats_plot <- ggplot() +
         geom_line(data=followersing, aes(x=DATE, y=FOLLOWERS, color="green")) +
         geom_line(data=followersing, aes(x=DATE, y=FOLLOWING, color="blue")) +
-        scale_color_manual(name="", labels=c("Following", "Followers"), values = c("blue", "green")) +
+        scale_color_manual(
+            name="",
+            labels=c("Following", "Followers"),
+            values = c("blue", "green")
+        ) +
         labs(x = "Date") +
-        scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
-                     labels=date_format("%b %y")) +
+        scale_x_date(
+            date_breaks = "1 month",
+            date_minor_breaks = "1 week",
+            labels=date_format("%b %y")
+        ) +
         labs(y = "People") +
         scale_y_continuous(labels = comma) +
         labs(title = "Followers and following")

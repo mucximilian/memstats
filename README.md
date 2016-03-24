@@ -28,7 +28,6 @@ If you want me to keep track of your Memrise learning progress as well, just con
 
 ##TO DOs
 
-* Time (x-axis) labels in English
 * Making the plots more adaptive (axis-labels, breaks)
 * Adding cumulative means evaluation (for trend)
 * Enable direct access to a MySQL database (would require no CSV file)
