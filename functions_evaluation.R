@@ -15,7 +15,7 @@ evaluate_stats <- function(stats, period, out_dir=NULL) {
     results <- NULL
     if(period =="total") {
         # Evaluate total data
-        stats[is.na(stats)] <- 0 # TO DO Remove not replace
+        stats <- stats[complete.cases(stats),] # TO DO Remove not replace
         results <- evaluate_period(stats, out_dir, "total")
     } else {
         # Split first, then evaluate
@@ -64,16 +64,12 @@ evaluate_period <- function(stats, out_dir, period) {
         year = get_year(stats_abs, out_dir),
         total = get_total(stats_abs, out_dir)
     )
-    
-    print(result_stats)
-    
+
     if(!period=="total") {
         # Adding period as date to stats table
         result_stats <- cbind(first_day_of_period, result_stats)
     }
-    
-    print(result_stats)
-    
+
     return(result_stats)
 }
 
