@@ -110,42 +110,48 @@ plot_graph <- function(stats, label, point=TRUE) {
 # Scatterplot with indicated mean
 plot_daily_scatterplot <- function(stats, label) {
     
-    labels <- get_labels(stats, label)
-
-    stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
-        geom_point(shape=20, size=1, color="grey30") +
-        geom_smooth(method=lm) +
-        geom_hline(yintercept=mean(stats[, c(2)], na.rm=TRUE),
-                   colour="lightblue") +
-        scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
-                     labels=date_format("%b %y")) +
-        scale_y_continuous(labels = comma)
-
-    stats_plot <- add_plot_labels(stats_plot, labels)
+    # Only plot more than one observation
+    if(has_sufficient_rows(stats)) {
+        labels <- get_labels(stats, label)
     
-    save_plot(stats_plot, labels[4])
+        stats_plot <- ggplot(stats, aes(x=DATE, y=stats[, c(2)])) +
+            geom_point(shape=20, size=1, color="grey30") +
+            geom_smooth(method=lm) +
+            geom_hline(yintercept=mean(stats[, c(2)], na.rm=TRUE),
+                       colour="lightblue") +
+            scale_x_date(date_breaks = "1 month", date_minor_breaks = "1 week",
+                         labels=date_format("%b %y")) +
+            scale_y_continuous(labels = comma)
+    
+        stats_plot <- add_plot_labels(stats_plot, labels)
+        
+        save_plot(stats_plot, labels[4])
+    }
 }
 
 # Followers/-ing plot with two graph lines
 plot_followersing <- function(followersing, dir) {
 
-    mem_stats_plot <- ggplot() +
-        geom_line(data=followersing, aes(x=DATE, y=FOLLOWERS, color="green")) +
-        geom_line(data=followersing, aes(x=DATE, y=FOLLOWING, color="blue")) +
-        scale_color_manual(
-            name="",
-            labels=c("Following", "Followers"),
-            values = c("blue", "green")
-        ) +
-        labs(x = "Date") +
-        scale_x_date(
-            date_breaks = "1 month",
-            date_minor_breaks = "1 week",
-            labels=date_format("%b %y")
-        ) +
-        labs(y = "People") +
-        scale_y_continuous(labels = comma) +
-        labs(title = "Followers and following")
-    
-    save_plot(mem_stats_plot, dir)
+    # Only plot more than one observation
+    if(has_sufficient_rows(stats)) {
+        mem_stats_plot <- ggplot() +
+            geom_line(data=followersing, aes(x=DATE, y=FOLLOWERS, color="green")) +
+            geom_line(data=followersing, aes(x=DATE, y=FOLLOWING, color="blue")) +
+            scale_color_manual(
+                name="",
+                labels=c("Following", "Followers"),
+                values = c("blue", "green")
+            ) +
+            labs(x = "Date") +
+            scale_x_date(
+                date_breaks = "1 month",
+                date_minor_breaks = "1 week",
+                labels=date_format("%b %y")
+            ) +
+            labs(y = "People") +
+            scale_y_continuous(labels = comma) +
+            labs(title = "Followers and following")
+        
+        save_plot(mem_stats_plot, dir)
+    }
 }
