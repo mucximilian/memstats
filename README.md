@@ -39,19 +39,19 @@ If you want me to keep track of your Memrise learning progress as well, just con
 ##Examples
 
 ###Cumulative overall results
-![Total points](./examples/plots/total/daily_cum_points.png)
-![Total items](./examples/plots/total/daily_cum_items.png)
+![Total points](./examples/output/plots/total/daily_cum_points.png)
+![Total items](./examples/output/plots/total/daily_cum_items.png)
 
 ###Overall results (per day)
-![Points per day](./examples/plots/total/daily_abs_points.png)
-![Items per day](./examples/plots/total/daily_abs_items.png)
+![Points per day](./examples/output/plots/total/daily_abs_points.png)
+![Items per day](./examples/output/plots/total/daily_abs_items.png)
 
 ###Daily means per week
-![Points per day](./examples/plots/total/daily_mean_per_week_points.png)
-![Items per day](./examples/plots/total/daily_mean_per_week_items.png)
+![Points per day](./examples/output/plots/total/daily_mean_per_week_points.png)
+![Items per day](./examples/output/plots/total/daily_mean_per_week_items.png)
 
 ###Number of total followers/-ing
-![Total followers/-ing](./examples/plots/total/followersing.png)
+![Total followers/-ing](./examples/output/plots/total/followersing.png)
 
 * * *
 License: GNU GENERAL PUBLIC LICENSE
