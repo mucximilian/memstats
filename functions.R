@@ -86,7 +86,7 @@ get_per_period <- function(stats, period, fun, dir, plot=TRUE){
             mean = paste(dir, "mean_per", period, sep="_")
         )
         
-        plot_daily_graph(stats_per_period, label)
+        plot_graph(stats_per_period, label)
     }
 
     return(stats_per_period)
@@ -136,8 +136,8 @@ apply_per_period <- function(stats, period, fun) {
 
 get_cum <- function(stats, label) {
     # Plot the cumulative sum of point and item data 
-    plot_daily_graph(stats[,c(1,2)], paste(label, "cum", sep="_"), FALSE)
-    plot_daily_graph(stats[,c(1,4)], paste(label, "cum", sep="_"), FALSE)
+    plot_graph(stats[,c(1,2)], paste(label, "cum", sep="_"), FALSE)
+    plot_graph(stats[,c(1,4)], paste(label, "cum", sep="_"), FALSE)
 }
 
 get_abs <- function(stats, label, type) {
