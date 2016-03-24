@@ -133,7 +133,7 @@ plot_daily_scatterplot <- function(stats, label) {
 plot_followersing <- function(followersing, dir) {
 
     # Only plot more than one observation
-    if(has_sufficient_rows(stats)) {
+    if(has_sufficient_rows(followersing)) {
         mem_stats_plot <- ggplot() +
             geom_line(data=followersing, aes(x=DATE, y=FOLLOWERS, color="green")) +
             geom_line(data=followersing, aes(x=DATE, y=FOLLOWING, color="blue")) +
