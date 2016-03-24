@@ -30,8 +30,7 @@ If you want me to keep track of your Memrise learning progress as well, just con
 
 * Time (x-axis) labels in English
 * Making the plots more adaptive (axis-labels, breaks)
-* More sophisticeted CSV output (combination of the CSV data that is created now)
-* Adding cumulative means
+* Adding cumulative means evaluation (for trend)
 * Enable direct access to a MySQL database (would require no CSV file)
 * OR: No storing in a database at all but direct in a CSV file (less workaround)
 * Based on a direct CSV storage: Adding a simple D3.js version for a direct visualization in the browser  
