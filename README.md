@@ -28,8 +28,7 @@ If you want me to keep track of your Memrise learning progress as well, just con
 
 ##TO DOs
 
-* Making the plots more adaptive (axis-labels, breaks)
-* Adding cumulative means evaluation (for trend)
+* Adding cumulative means evaluation from stats that are currently stored as CSV (for trend)
 * Enable direct access to a MySQL database (would require no CSV file)
 * OR: No storing in a database at all but direct in a CSV file (less workaround)
 * Based on a direct CSV storage: Adding a simple D3.js version for a direct visualization in the browser  
