@@ -7,7 +7,7 @@
 source("setup.R")
 
 # Indicate the name of the input CSV file here 
-file <- "memrise_stats_20160322.csv"
+file <- "memrise_stats_20160405.csv"
 
 # Import file
 memstats <- get_data(file)
@@ -16,9 +16,9 @@ memstats <- get_data(file)
 # Get stats
 
 # All stats (overall, year, month, week)
-# evaluate_stats_full(memstats, "stats_")
+evaluate_stats_full(memstats, "stats_")
 
-evaluate_stats_latest(memstats, "month", "current")
+# evaluate_stats_latest(memstats, "month", "current", "1_")
 
 # Overall stats
 # evaluate_stats(memstats, "total", "test_total")
