@@ -13,6 +13,8 @@
 # General functions
 
 has_sufficient_rows <- function(stats) {
+    # Checking if the dataset for plotting has more than two rows. Plotting
+    # stats that have only one row is not meaningful
     if(nrow(stats) > 1) {
         return(TRUE)
     } else {
@@ -32,15 +34,20 @@ save_plot <- function(plot, name){
 # Labelling functions
 
 get_labels <- function(outdir) {
+    # Getting plot labels from the outdir list
+    
+    # Axis labels
     x_label <- "Date" # The X-axis is always the date
     y_label <- get_y_label(last(outdir[[3]]))
+    
+    # Title
     title <- get_pretty_title(outdir)
     
     return(c(x_label, y_label, title))
 }
 
 get_y_label <- function(colname) {
-    
+    # Constructing y-axis label from the column title
     colname <- gsub("_", " ", tolower(colname))
     y_label <- unlist(strsplit(colname, " "))[1] # Get first part of column name
     y_label <- get_capitalized(y_label)
@@ -49,7 +56,7 @@ get_y_label <- function(colname) {
 }
 
 get_pretty_title <- function(label) {
-    
+    # Prettifies the title label
     label_new <- paste(
         paste(label[[2]], collapse = " "),
         paste(label[[3]], collapse = " "),
@@ -67,14 +74,15 @@ get_pretty_title <- function(label) {
 
 get_capitalized <- function(text) {
     text <- paste(
-        toupper(substring(text, 1, 1)),
-        substring(text, 2,),
+        toupper(substring(text, 1, 1)), # First character of string
+        substring(text, 2), # Rest of the string
         sep=""
     )
     return(text)
 }
 
 add_plot_labels <- function(plot, labels) {
+    # Adding labels to plot
     plot <- plot +
         labs(x = labels[1]) +
         labs(y = labels[2]) +
@@ -122,6 +130,7 @@ create_plot <- function(stats, outdir, type="graph_points") {
             breaks_major_format <- date_format("%d.%m (%A)")
         }
         
+        # Setting date breaks for plot
         stats_plot <- stats_plot + 
             scale_x_date(
                 date_breaks = breaks_major, 
@@ -139,7 +148,6 @@ create_plot <- function(stats, outdir, type="graph_points") {
 
         filename <- get_filepath(outdir)
 
-        # print(stats_plot)
         save_plot(stats_plot, filename) # TO DO update function input
    }
 }

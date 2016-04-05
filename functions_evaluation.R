@@ -47,6 +47,7 @@ evaluate_stats_latest <- function(stats, period, type, outdir=NULL) {
 }
 
 evaluate_stats_full <- function(stats, outdir=NULL) {
+    # Performs an evaluation of all periods
     
     outdir <- get_outdir(outdir)
     
@@ -132,6 +133,8 @@ evaluate_period_splits <- function(stats, period, outdir) {
     return(results.df)
 }
 
+################################################################################
+
 get_followersing <- function(stats, outdir) {
     outdir <- add_to_path(outdir, "followersing", TRUE)
     plot_followersing(stats, outdir)
@@ -210,6 +213,8 @@ get_stats <- function(stats, outdir) {
     
     return(stats_abs)
 }
+
+################################################################################
 
 get_stats_daily <- function(stats, outdir, period=NULL) {
 

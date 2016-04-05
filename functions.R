@@ -176,9 +176,6 @@ get_abs <- function(stats, outdir, type) {
 ################################################################################
 # Input data splitting functions for periods
 
-# TO Do:
-# Add last week/month/year function
-
 get_period_splits <- function(df, period, col=1) {
     # Splits a data frame into a list of data frames by a provided time period 
     # which cann be 'week', 'month' or 'year'.
@@ -265,11 +262,13 @@ create_dir <- function(outdir) {
 }
 
 get_path <- function(outdir) {
+    # Construct the path from the outdir lists
     path <- do.call(file.path, as.list(unlist(outdir)))
     return(path)
 }
 
 get_filepath <- function(outdir) {
+    # Returning a filepath from the outdir list
     filename <- tolower(paste(outdir[[3]], collapse="_"))
     filename <- gsub(" ", "_", filename)
     filepath <- do.call(file.path, c(outdir[[1]], outdir[[2]], filename))
@@ -278,6 +277,7 @@ get_filepath <- function(outdir) {
 }
 
 get_time_string <- function() {
+    # Returns the current time as YYYYMMDD-HHMM
     time <- strftime(Sys.time(), format="%Y%m%d-%H%M")
     return(time)
 } 
