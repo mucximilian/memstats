@@ -4,12 +4,13 @@
 #
 ################################################################################
 
-evaluate_stats <- function(stats, period, out_dir=NULL) {
-    # Performs an evaluation on the chosen period
+evaluate_stats <- function(stats, period, outdir=NULL, create_outdir=TRUE) {
+    # Performs an evaluation on the chosen period (week, month, year or total)
     
-    out_dir <- get_out_dir(out_dir)
-    out_dir <- paste(out_dir, period, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
+    if(create_outdir) {
+        outdir <- get_outdir(outdir)
+    }
+    outdir <- add_to_path(outdir, period)
 
     # Evaluate overall stats or split the input data by period
     results <- NULL
@@ -17,20 +18,21 @@ evaluate_stats <- function(stats, period, out_dir=NULL) {
         # TO DO: Check if this can be removed due to NA check in 'get_data'
         stats <- stats[complete.cases(stats),]
         
-        results <- evaluate_period(stats, out_dir, "total")
+        results <- evaluate_period(stats, outdir, "total")
     } else {
         # Split first, then evaluate
-        results <- evaluate_period_splits(stats, period, out_dir)
+        results <- evaluate_period_splits(stats, period, outdir)
     }
-    save_as_csv(results, out_dir, period)
+    print("saving CSV")
+    save_as_csv(results, outdir)
 }
 
-evaluate_stats_latest <- function(stats, period, type, out_dir=NULL) {
-    # Performs an evaluation of the current or last week or month 
+evaluate_stats_latest <- function(stats, period, type, outdir=NULL) {
+    # Performs an evaluation of the current or last (type) week or month (period)
     
-    out_dir <- get_out_dir(type)
-    out_dir <- paste(out_dir, period, sep="/")
-    dir.create(out_dir, showWarnings = FALSE)
+    outdir <- paste(outdir, type, sep="")
+    outdir <- get_outdir(outdir)
+    outdir <- add_to_path(outdir, period)
     
     # Split first, then evaluate
     stats.split <- get_period_splits(stats, period)
@@ -39,22 +41,22 @@ evaluate_stats_latest <- function(stats, period, type, out_dir=NULL) {
         current = last(stats.split)[[1]], # Current period
         last = stats.split[length(stats.split)-1][[1]] # Last complete period
     )
-    result <- evaluate_period(latest, out_dir, period)
+    result <- evaluate_period(latest, outdir, period)
     
-    save_as_csv(result, out_dir, period)
+    save_as_csv(result, outdir, period)
 }
 
-evaluate_stats_full <- function(stats, out_dir=NULL) {
+evaluate_stats_full <- function(stats, outdir=NULL) {
     
-    out_dir <- get_out_dir(out_dir)
+    outdir <- get_outdir(outdir)
     
-    evaluate_stats(memstats, "total", out_dir)
-    evaluate_stats(memstats, "year", out_dir)
-    evaluate_stats(memstats, "month", out_dir)
-    evaluate_stats(memstats, "week", out_dir)
+    evaluate_stats(memstats, "total", outdir, FALSE)
+    evaluate_stats(memstats, "year", outdir, FALSE)
+    evaluate_stats(memstats, "month", outdir, FALSE)
+    evaluate_stats(memstats, "week", outdir, FALSE)
 }
 
-evaluate_period <- function(stats, out_dir, period) {
+evaluate_period <- function(stats, outdir, period) {
 
     if(!period=="total") {
     
@@ -67,22 +69,21 @@ evaluate_period <- function(stats, out_dir, period) {
             year = "%Y"
         )
         period_str <- strftime(first_day_of_period, format)
-        out_dir <- paste(out_dir, period_str, sep="/")
-        dir.create(out_dir, showWarnings = FALSE)
+        outdir <- add_to_path(outdir, period_str)
     }
     
     # Followers/-ing
-    get_followersing(stats[,c(1,6,7)], out_dir)
+    get_followersing(stats[,c(1,6,7)], outdir)
     
     # Print plots and get stats
-    stats_abs <- get_stats(stats, out_dir)
+    stats_abs <- get_stats(stats, outdir)
 
     result_stats <- switch(
         period,
-        week = get_week(stats_abs, out_dir),
-        month = get_month(stats_abs, out_dir),
-        year = get_year(stats_abs, out_dir),
-        total = get_total(stats_abs, out_dir)
+        week = get_week(stats_abs, outdir),
+        month = get_month(stats_abs, outdir),
+        year = get_year(stats_abs, outdir),
+        total = get_total(stats_abs, outdir)
     )
 
     if(!period=="total") {
@@ -93,7 +94,7 @@ evaluate_period <- function(stats, out_dir, period) {
     return(result_stats)
 }
 
-evaluate_period_splits <- function(stats, period, out_dir) {
+evaluate_period_splits <- function(stats, period, outdir) {
     # Splits a data frame by a given period and calls the corresponding function
     # for further processing
     
@@ -102,9 +103,9 @@ evaluate_period_splits <- function(stats, period, out_dir) {
     # Collect the results in a list of data frames
     results <- switch(
         period,
-        year = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period),
-        month = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period),
-        week = lapply(stats.split, evaluate_period, out_dir=out_dir, period=period)
+        year = lapply(stats.split, evaluate_period, outdir=outdir, period=period),
+        month = lapply(stats.split, evaluate_period, outdir=outdir, period=period),
+        week = lapply(stats.split, evaluate_period, outdir=outdir, period=period)
     )
     
     # Combine multiple data frames from list in single data frame
@@ -131,20 +132,20 @@ evaluate_period_splits <- function(stats, period, out_dir) {
     return(results.df)
 }
 
-get_followersing <- function(stats, out_path) {
-    path_followersing = paste(out_path, "followersing", sep="/")
-    plot_followersing(stats, path_followersing)
+get_followersing <- function(stats, outdir) {
+    outdir <- add_to_path(outdir, "followersing", TRUE)
+    plot_followersing(stats, outdir)
 }
 
-get_week <- function(stats, out_path) {
-    stats <- get_stats_daily(stats, out_path)
+get_week <- function(stats, outdir) {
+    stats <- get_stats_daily(stats, outdir)
     return(stats)
 }
 
-get_month <- function(stats, out_path) {
+get_month <- function(stats, outdir) {
     
-    stats_daily <- get_stats_daily(stats, out_path, "month")
-    stats_weekly <- get_stats_weekly(stats, out_path)
+    stats_daily <- get_stats_daily(stats, outdir, "month")
+    stats_weekly <- get_stats_weekly(stats, outdir)
 
     # Single values output
     stats_total <- data.frame(
@@ -155,12 +156,12 @@ get_month <- function(stats, out_path) {
     return(stats_total)
 }
 
-get_year <- function(stats, out_path) {
+get_year <- function(stats, outdir) {
     
-    stats_daily <- get_stats_daily(stats, out_path, "year")
-    stats_weekly <- get_stats_weekly(stats, out_path, "year")
-    stats_monthly <- get_stats_monthly(stats, out_path, "year")
-    stats_quarterly <- get_stats_quarterly(stats, out_path)
+    stats_daily <- get_stats_daily(stats, outdir, "year")
+    stats_weekly <- get_stats_weekly(stats, outdir, "year")
+    stats_monthly <- get_stats_monthly(stats, outdir, "year")
+    stats_quarterly <- get_stats_quarterly(stats, outdir)
     
     # Single values output
     stats_total <- data.frame(
@@ -173,13 +174,13 @@ get_year <- function(stats, out_path) {
     return(stats_total)
 }
 
-get_total <- function(stats, out_path) {
+get_total <- function(stats, outdir) {
     
-    stats_daily <- get_stats_daily(stats, out_path, "total")
-    stats_weekly <- get_stats_weekly(stats, out_path, "total")
-    stats_monthly <- get_stats_monthly(stats, out_path, "total")
-    stats_quarterly <- get_stats_quarterly(stats, out_path, "total")
-    stats_yearly <- get_stats_yearly(stats, out_path)
+    stats_daily <- get_stats_daily(stats, outdir, "total")
+    stats_weekly <- get_stats_weekly(stats, outdir, "total")
+    stats_monthly <- get_stats_monthly(stats, outdir, "total")
+    stats_quarterly <- get_stats_quarterly(stats, outdir, "total")
+    stats_yearly <- get_stats_yearly(stats, outdir)
     
     # Single values output
     stats_total <- data.frame(
@@ -193,23 +194,24 @@ get_total <- function(stats, out_path) {
     return(stats_total)
 }
 
-get_stats <- function(stats, out_path) {
+get_stats <- function(stats, outdir) {
     
-    path_daily = paste(out_path, "daily", sep="/")
-    
+    outdir <- add_to_path(outdir, "daily", TRUE)
+
     # Cumulative per day
-    get_cum(stats, path_daily)
+    get_cum(stats, outdir, "points")
+    get_cum(stats, outdir, "items")
     
     # Absolute per day
-    abs_points <- get_abs(stats, path_daily, "points")
-    abs_items <- get_abs(stats, path_daily, "items")
+    abs_points <- get_abs(stats, outdir, "points")
+    abs_items <- get_abs(stats, outdir, "items")
     
     stats_abs <- cbind(abs_points, ITEMS=abs_items[,c(2)])
     
     return(stats_abs)
 }
 
-get_stats_daily <- function(stats, out_path, period=NULL) {
+get_stats_daily <- function(stats, outdir, period=NULL) {
 
     # Day sums
     sum_points <- sum(stats[,c(2)])
@@ -220,36 +222,35 @@ get_stats_daily <- function(stats, out_path, period=NULL) {
     mean_daily_items <- mean(stats[,c(3)])
 
     # Create plots
-    get_stats_daily_month <- function(stats, path_daily) {
-
-        get_per_period(stats[c(1,2)], "week", mean, path_daily)
-        get_per_period(stats[c(1,3)], "week", mean, path_daily)
+    get_stats_daily_month <- function(stats, outdir) {
+        get_per_period(stats[c(1,2)], "week", mean, outdir)
+        get_per_period(stats[c(1,3)], "week", mean, outdir)
     }
-    get_stats_daily_year <- function(stats, path_daily) {
+    get_stats_daily_year <- function(stats, outdir) {
 
-        get_stats_daily_month(stats, path_daily)
+        get_stats_daily_month(stats, outdir)
         
-        get_per_period(stats[c(1,2)], "month", mean, path_daily)
-        get_per_period(stats[c(1,3)], "month", mean, path_daily)
+        get_per_period(stats[c(1,2)], "month", mean, outdir)
+        get_per_period(stats[c(1,3)], "month", mean, outdir)
         
-        get_per_period(stats[c(1,2)], "quarter", mean, path_daily)
-        get_per_period(stats[c(1,3)], "quarter", mean, path_daily)
+        get_per_period(stats[c(1,2)], "quarter", mean, outdir)
+        get_per_period(stats[c(1,3)], "quarter", mean, outdir)
     }
-    get_stats_daily_total <- function(stats, path_daily) {
+    get_stats_daily_total <- function(stats, outdir) {
 
-        get_stats_daily_year(stats, path_daily)
+        get_stats_daily_year(stats, outdir)
         
-        get_per_period(stats[c(1,2)], "year", mean, path_daily)
-        get_per_period(stats[c(1,3)], "year", mean, path_daily)
+        get_per_period(stats[c(1,2)], "year", mean, outdir)
+        get_per_period(stats[c(1,3)], "year", mean, outdir)
     }
     if(!is.null(period)) {
-        path_daily = paste(out_path, "daily", sep="/")
+        outdir <- add_to_path(outdir, "daily", TRUE)
 
         switch(
             period,
-            month = get_stats_daily_month(stats, path_daily),
-            year = get_stats_daily_year(stats, path_daily),
-            total = get_stats_daily_total(stats, path_daily)
+            month = get_stats_daily_month(stats, outdir),
+            year = get_stats_daily_year(stats, outdir),
+            total = get_stats_daily_total(stats, outdir)
         )
     }
 
@@ -264,36 +265,36 @@ get_stats_daily <- function(stats, out_path, period=NULL) {
     return(stats_total)
 }
 
-get_stats_weekly <- function(stats, out_path, period=NULL) {
+get_stats_weekly <- function(stats, outdir, period=NULL) {
 
     # Week sums
-    sum_weekly_points <- get_per_period(stats[c(1,2)], "week", sum, out_path)
-    sum_weekly_items <- get_per_period(stats[c(1,3)], "week", sum, out_path)
+    sum_weekly_points <- get_per_period(stats[c(1,2)], "week", sum, outdir)
+    sum_weekly_items <- get_per_period(stats[c(1,3)], "week", sum, outdir)
     
     # Week means overall
     mean_weekly_points <- mean(sum_weekly_points[,c(2)])
     mean_weekly_items <- mean(sum_weekly_items[,c(2)])
     
     # Create plots
-    get_stats_weekly_year <- function(stats, path_weekly) {
-        get_per_period(stats[c(1,2)], "month", mean, path_weekly)
-        get_per_period(stats[c(1,3)], "month", mean, path_weekly)
+    get_stats_weekly_year <- function(stats, outdir) {
+        get_per_period(stats[c(1,2)], "month", mean, outdir)
+        get_per_period(stats[c(1,3)], "month", mean, outdir)
         
-        get_per_period(stats[c(1,2)], "quarter", mean, path_weekly)
-        get_per_period(stats[c(1,3)], "quarter", mean, path_weekly)
+        get_per_period(stats[c(1,2)], "quarter", mean, outdir)
+        get_per_period(stats[c(1,3)], "quarter", mean, outdir)
     }
-    get_stats_weekly_total <- function(stats, path_weekly) {
-        get_stats_weekly_year(stats, path_weekly)
+    get_stats_weekly_total <- function(stats, outdir) {
+        get_stats_weekly_year(stats, outdir)
 
-        get_per_period(stats[c(1,2)], "year", mean, path_weekly)
-        get_per_period(stats[c(1,3)], "year", mean, path_weekly)
+        get_per_period(stats[c(1,2)], "year", mean, outdir)
+        get_per_period(stats[c(1,3)], "year", mean, outdir)
     }
     if(!is.null(period)) {
-        path_weekly = paste(out_path, "weekly", sep="/")
+        outdir <- add_to_path(outdir, "weekly", TRUE)
         switch(
             period,
-            year = get_stats_weekly_year(stats, path_weekly),
-            total = get_stats_weekly_total(stats, path_weekly)
+            year = get_stats_weekly_year(stats, outdir),
+            total = get_stats_weekly_total(stats, outdir)
         )
     }
     
@@ -306,33 +307,33 @@ get_stats_weekly <- function(stats, out_path, period=NULL) {
     return(stats_total)
 }
 
-get_stats_monthly <- function(stats, out_path, period=NULL) {
+get_stats_monthly <- function(stats, outdir, period=NULL) {
     
     # Month sums
-    sum_monthly_points <- get_per_period(stats[c(1,2)], "month", sum, out_path)
-    sum_monthly_items <- get_per_period(stats[c(1,3)], "month", sum, out_path)
+    sum_monthly_points <- get_per_period(stats[c(1,2)], "month", sum, outdir)
+    sum_monthly_items <- get_per_period(stats[c(1,3)], "month", sum, outdir)
     
     # Month means overall
     mean_monthly_points <- mean(sum_monthly_points[,c(2)])
     mean_monthly_items <- mean(sum_monthly_items[,c(2)])
     
     # Create plots
-    get_stats_monthly_year <- function(stats, path_monthly) {
-        get_per_period(stats[c(1,2)], "quarter", mean, path_monthly)
-        get_per_period(stats[c(1,3)], "quarter", mean, path_monthly)
+    get_stats_monthly_year <- function(stats, outdir) {
+        get_per_period(stats[c(1,2)], "quarter", mean, outdir)
+        get_per_period(stats[c(1,3)], "quarter", mean, outdir)
     }
-    get_stats_monthly_total <- function(stats, path_monthly) {
-        get_stats_monthly_year(stats, path_monthly)
+    get_stats_monthly_total <- function(stats, outdir) {
+        get_stats_monthly_year(stats, outdir)
         
-        get_per_period(stats[c(1,2)], "year", mean, path_monthly)
-        get_per_period(stats[c(1,3)], "year", mean, path_monthly)
+        get_per_period(stats[c(1,2)], "year", mean, outdir)
+        get_per_period(stats[c(1,3)], "year", mean, outdir)
     }
     if(!is.null(period)) {
-        path_monthly = paste(out_path, "monthly", sep="/")
+        outdir <- add_to_path(outdir, "monthly", TRUE)
         switch(
             period,
-            year = get_stats_monthly_year(stats, path_monthly),
-            total = get_stats_monthly_total(stats, path_monthly)
+            year = get_stats_monthly_year(stats, outdir),
+            total = get_stats_monthly_total(stats, outdir)
         )
     }
     
@@ -345,21 +346,21 @@ get_stats_monthly <- function(stats, out_path, period=NULL) {
     return(stats_total)
 }
 
-get_stats_quarterly <- function(stats, out_path, period=NULL) {
+get_stats_quarterly <- function(stats, outdir, period=NULL) {
     
     # Quarter sums
-    sum_quarterly_points <- get_per_period(stats[c(1,2)], "quarter", sum, out_path)
-    sum_quarterly_items <- get_per_period(stats[c(1,3)], "quarter", sum, out_path)
+    sum_quarterly_points <- get_per_period(stats[c(1,2)], "quarter", sum, outdir)
+    sum_quarterly_items <- get_per_period(stats[c(1,3)], "quarter", sum, outdir)
     
     # Quarter means overall
     mean_quarterly_points <- mean(sum_quarterly_points[,c(2)])
     mean_quarterly_items <- mean(sum_quarterly_items[,c(2)])
     
     if(!is.null(period)) {
-        path_quarterly = paste(out_path, "quarterly", sep="/")
+        outdir <- add_to_path(outdir, "quarterly", TRUE)
         
-        get_per_period(sum_quarterly_points, "year", mean, path_quarterly)
-        get_per_period(sum_quarterly_items, "year", mean, path_quarterly)
+        get_per_period(sum_quarterly_points, "year", mean, outdir)
+        get_per_period(sum_quarterly_items, "year", mean, outdir)
     }
     
     # Single values output
@@ -371,11 +372,11 @@ get_stats_quarterly <- function(stats, out_path, period=NULL) {
     return(stats_total)
 }
 
-get_stats_yearly <- function(stats, out_path) {
+get_stats_yearly <- function(stats, outdir) {
 
     # Year sums
-    sum_annual_points <- get_per_period(stats[c(1,2)], "year", sum, out_path)
-    sum_annual_items <- get_per_period(stats[c(1,3)], "year", sum, out_path)
+    sum_annual_points <- get_per_period(stats[c(1,2)], "year", sum, outdir)
+    sum_annual_items <- get_per_period(stats[c(1,3)], "year", sum, outdir)
     
     # Year means overall
     mean_annual_points <- mean(sum_annual_points[,c(2)])

@@ -77,8 +77,8 @@ get_period_subset <- function(memstats, period) {
     return(memstats_sub)
 }
 
-get_per_period <- function(stats, period, fun, dir, plot=TRUE){
-    # Plot and return the output of a function applied to the input data on 
+get_per_period <- function(stats, period, fun, outdir, plot=TRUE){
+    # Plot and return the output of a function applied to the input data on a
     # specified period
     
     stats_per_period <- apply_per_period(stats, period, fun)
@@ -87,12 +87,15 @@ get_per_period <- function(stats, period, fun, dir, plot=TRUE){
     if(plot) {
         # Create label sum/mean_per_week/month/quarter/year
         label <- switch(
-            as.character(match.call()[4]),
-            sum = paste(dir, "/", "sum_per_", period, sep=""),
-            mean = paste(dir, "mean_per", period, sep="_")
+            as.character(match.call()[4]), # Input function argument as string
+            sum = paste("sum_per", period, sep="_"),
+            mean = paste("mean_per", period, sep="_")
         )
         
-        plot_graph(stats_per_period, label)
+        outdir <- add_to_path(outdir, label, TRUE)
+        outdir <- add_to_path(outdir, colnames(stats)[2], TRUE)
+        
+        create_plot(stats_per_period, outdir)
     }
 
     return(stats_per_period)
@@ -140,21 +143,33 @@ apply_per_period <- function(stats, period, fun) {
     return(stats_period.idx)
 }
 
-get_cum <- function(stats, label) {
-    # Plot the cumulative sum of point and item data 
-    plot_graph(stats[,c(1,2)], paste(label, "cum", sep="_"), FALSE)
-    plot_graph(stats[,c(1,4)], paste(label, "cum", sep="_"), FALSE)
+get_cum <- function(stats, outdir, type) {
+    # Plot and return columns with the absolute values of points or items
+    stats_abs <- switch(
+        type,
+        points = stats[,c(1,2)],
+        items = stats[,c(1,4)]
+    )
+    
+    outdir <- add_to_path(outdir, "cum", TRUE)
+    outdir <- add_to_path(outdir, colnames(stats_abs)[2], TRUE)
+    
+    create_plot(stats_abs, outdir, "graph")
+    return(stats_abs)
 }
 
-get_abs <- function(stats, label, type) {
+get_abs <- function(stats, outdir, type) {
     # Plot and return columns with the absolute values of points or items
     stats_abs <- switch(
         type,
         points = stats[,c(1,3)],
         items = stats[,c(1,5)]
     )
+
+    outdir <- add_to_path(outdir, "abs", TRUE)
+    outdir <- add_to_path(outdir, colnames(stats_abs)[2], TRUE)
     
-    plot_daily_scatterplot(stats_abs, paste(label, "abs", sep="_"))
+    create_plot(stats_abs, outdir, "scatterplot")
     return(stats_abs)
 }
 
@@ -183,38 +198,83 @@ get_period_splits <- function(df, period, col=1) {
 
 ################################################################################
 # Create CSV output
-save_as_csv <- function(stats, out_dir, period) {
-
+save_as_csv <- function(stats, outdir) {
     # Store stats in period directory
-    filename <- paste(period, "stats.csv", sep="_")
-    filepath <- paste(out_dir, filename, sep="/")
+    
+    outdir <- add_to_path(outdir, "stats.csv", TRUE)
+    filepath <- get_filepath(outdir)
     write.csv(stats, file = filepath, row.names = FALSE)
     
     print(paste("Saving stats", filepath, sep=" "))
 }
 
-get_out_dir <- function(out_dir=NULL) {
-    # Create output directory with the options
-    # - added if provided
-    # - date and time if not provided
-    # - if provided and end with _ add date and time
+get_outdir <- function(outdir=NULL) {
+    # Creates a list that consists of three lists: 
+    # - 1st list: general output directory path 
+    # - 2nd list: part of the output path with period specific info used tor the
+    #             title of a plot
+    # - 3rd list: part of the filepath which is used for the name of the file
+    #             and the labeling of the plots.
+    #
+    # The general output directory path is created with
+    # - input directory name if provided
+    # - date and time as directory name if not provided
+    # - if provided input ends with underscore, date and time is added
+    
     dir_output = "output"
     dir.create(dir_output, showWarnings = FALSE)
-    if(!is.null(out_dir)) {
-        if(!grepl("^output", out_dir)) {
-            if(grepl("_$", out_dir)) {
-                out_dir <- paste(out_dir, get_time_string(), sep="")
-                out_dir <- paste(dir_output, out_dir, sep="/")
-            } else {
-                out_dir <- paste(dir_output, out_dir, sep="/")
-            }
+    
+    dir_gen = list(dir_output)
+    dir_perdiod = list()
+    dir_labels = list()
+    
+    # Create output directory name from provided name or time string 
+    if(!is.null(outdir)) {
+        if(grepl("_$", outdir)) {
+            # If provided name ends with underscore add time string
+            outdir <- paste(outdir, get_time_string(), sep="")
+            dir_gen <- c(dir_gen, outdir)
+        } else {
+            dir_gen <- c(dir_gen, outdir)
         }
     } else {
-        out_dir <- paste("output", get_time_string(), sep="/")
+        dir_gen <- c(dir_gen, get_time_string())
     }
-    dir.create(out_dir, showWarnings = FALSE)
     
-    return(out_dir)
+    filepath = list(dir_gen, dir_perdiod, dir_labels)
+
+    create_dir(dir_gen)
+    
+    return(filepath)
+}
+
+add_to_path <- function(path, to_add, filename=FALSE) {
+    # Appends a string to the second list of which the filepath is constructed
+    if(!filename) {
+        path[[2]] <- c(path[[2]], to_add)
+        create_dir(path)
+    } else {
+        path[[3]] <- c(path[[3]], to_add)
+    }
+    return(path)
+}
+
+create_dir <- function(outdir) {
+    path <- get_path(outdir)
+    dir.create(path, showWarnings = FALSE)
+}
+
+get_path <- function(outdir) {
+    path <- do.call(file.path, as.list(unlist(outdir)))
+    return(path)
+}
+
+get_filepath <- function(outdir) {
+    filename <- tolower(paste(outdir[[3]], collapse="_"))
+    filename <- gsub(" ", "_", filename)
+    filepath <- do.call(file.path, c(outdir[[1]], outdir[[2]], filename))
+    
+    return(filepath)
 }
 
 get_time_string <- function() {
