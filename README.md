@@ -24,8 +24,6 @@ The statistic values of the cumulative/absolute sums and means are computed for 
 * 9 per month
 * 5 per week
 
-Bla
-
 If you want me to keep track of your Memrise learning progress as well, just contact me!
 
 ##TO DOs
