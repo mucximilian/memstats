@@ -29,8 +29,11 @@ If you want me to keep track of your Memrise learning progress as well, just con
 ##TO DOs
 
 * Adding cumulative means evaluation from stats that are currently stored as CSV (for trend analysis)
-* Enable direct access to a MySQL database (would require no CSV file)
-* Alternatively: No storing in a database at all but directly in a CSV file (less workaround)
+
+##Ideas
+
+* Enabling direct access to a MySQL database (would require no CSV file)
+* Alternatively: No storing of initial data in a database but directly in a CSV file (less workaround)
 * Based on a CSV storage: Adding a simple D3.js version for a direct visualization in the browser  
   Example: http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5
 
