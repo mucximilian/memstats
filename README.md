@@ -39,7 +39,7 @@ If you want me to keep track of your Memrise learning progress as well, just con
 
 ##Examples
 
-Here are some example plots created for my profile which visualize my learning process:
+Here are some example plots created for my profile which visualize my overall learning process:
 
 ###Cumulative overall results
 ![Total points](./examples/output/plots/total/daily_cum_points.png)
