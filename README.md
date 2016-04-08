@@ -4,7 +4,7 @@ A collection of R scripts that analyze and plot my recorded learning progress an
 
 ##About
 
-Since March 2015, I keep records of my Memrise learning performance (this is my [Memrise profile](http://www.memrise.com/user/mucx)). I figured out that getting more diverse stats about my learning than the ones available on the profile page boosts my learning motivation. I can aim for new goals regularly, like increasing a specific mean value. For example, keeping the overall mean of points per day at a certain value.
+Since March 2015, I keep record of my Memrise learning performance (this is my [Memrise profile](http://www.memrise.com/user/mucx)). I figured out that getting more diverse stats about my learning process than the ones available on the profile page boosts my learning motivation. I can aim for new goals regularly, like increasing a specific mean value. For example, keeping the overall mean of points per day at a certain value.
 
 A cron-job controlled PHP script obtains the raw learning data from the API and stores it into a MySQL database (__Note:__ The PHP script is not part of the repository). Using the quick export function of _phpMyAdmin_, a CSV file is created containing the following data:
 
@@ -33,7 +33,7 @@ If you want me to keep track of your Memrise learning progress as well, just con
 ##Ideas
 
 * Enabling direct access to a MySQL database (would require no CSV file)
-* Alternatively: No storing of initial data in a database but directly in a CSV file (less workaround)
+* Alternatively: storing the API data not in a database but directly in a CSV file (less workaround)
 * Based on a CSV storage: Adding a simple D3.js version for a direct visualization in the browser  
   Example: http://bl.ocks.org/d3noob/b3ff6ae1c120eea654b5
 
